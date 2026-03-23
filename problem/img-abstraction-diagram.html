@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<style>* { margin:0;padding:0;box-sizing:border-box; } body { background:#faf9f7;display:flex;align-items:center;justify-content:center;padding:1.5rem;font-family:'EB Garamond',Georgia,serif; }</style>
+</head><body>
+<svg viewBox="0 0 560 200" style="max-width:560px;width:100%">
+  <!-- Territory: mountains -->
+  <polygon points="80,160 140,60 200,160" fill="#c8a882" stroke="#a07850" stroke-width="0.8"/>
+  <polygon points="160,160 230,75 300,160" fill="#b89060" stroke="#906840" stroke-width="0.8"/>
+  <!-- River -->
+  <path d="M60 120 Q120 105 180 118 Q240 130 300 112" fill="none" stroke="#7aaecc" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Green dots (trees) -->
+  <circle cx="100" cy="135" r="7" fill="#6aaa50" opacity="0.8"/>
+  <circle cx="125" cy="148" r="6" fill="#6aaa50" opacity="0.8"/>
+  <circle cx="195" cy="145" r="7" fill="#6aaa50" opacity="0.8"/>
+  <!-- Territory label -->
+  <text font-family="Georgia,serif" font-size="11" fill="#888" x="180" y="185" text-anchor="middle">Territory: Objective Reality</text>
+
+  <!-- Abstraction arrow -->
+  <line x1="305" y1="110" x2="370" y2="95" stroke="#ccc" stroke-width="0.8" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+  <text font-family="Georgia,serif" font-size="10" fill="#bbb" font-style="italic" x="335" y="95" text-anchor="middle">Abstraction</text>
+
+  <!-- Map: outline mountains -->
+  <polygon points="390,160 440,75 490,160" fill="none" stroke="#888" stroke-width="1.2"/>
+  <polygon points="450,160 500,85 550,160" fill="none" stroke="#888" stroke-width="1.2"/>
+  <!-- Dashed curve (river abstracted) -->
+  <path d="M375 125 Q430 108 480 120 Q520 130 555 115" fill="none" stroke="#aaa" stroke-width="1" stroke-dasharray="4,3"/>
+  <!-- Dot placeholders -->
+  <circle cx="410" cy="145" r="2.5" fill="#aaa"/>
+  <circle cx="455" cy="150" r="2.5" fill="#aaa"/>
+  <circle cx="500" cy="145" r="2.5" fill="#aaa"/>
+  <!-- Map label -->
+  <text font-family="Georgia,serif" font-size="11" fill="#888" x="465" y="185" text-anchor="middle">Map: Mental Representation</text>
+
+  <defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#ccc" stroke-width="1.5"/></marker></defs>
+</svg>
+</body></html>

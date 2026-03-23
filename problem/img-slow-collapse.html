@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #faf9f7;
+      font-family: 'EB Garamond', Georgia, serif;
+      padding: 1.5rem;
+    }
+    canvas { display: block; width: 100%; }
+    .controls {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin-top: 0.8rem; font-size: 0.75rem; color: #888;
+    }
+    .controls label { white-space: nowrap; }
+    input[type=range] {
+      flex: 1; accent-color: #888;
+      height: 2px; cursor: pointer; outline: none;
+    }
+    .val { min-width: 28px; text-align: right; color: #555; font-size: 0.75rem; }
+    .legend {
+      display: flex; gap: 2rem; margin-top: 0.7rem;
+      font-size: 0.75rem; color: #888; justify-content: center;
+    }
+    .dot {
+      display: inline-block; width: 20px; height: 2px;
+      vertical-align: middle; margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="c" width="560" height="200"></canvas>
+  <div class="controls">
+    <label>Private belief</label>
+    <input type="range" id="slider" min="0" max="100" value="85">
+    <span class="val" id="val">85%</span>
+  </div>
+  <div class="legend">
+    <span><span class="dot" style="background:#378ADD;display:inline-block;"></span>Private belief</span>
+    <span><span class="dot" style="background:#D85A30;display:inline-block;"></span>Performed compliance</span>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    const slider = document.getElementById('slider');
+    const valEl = document.getElementById('val');
+    const W = 560, H = 200;
+    const pad = { t: 30, r: 20, b: 35, l: 45 };
+    const cw = W - pad.l - pad.r;
+    const ch = H - pad.t - pad.b;
+    const THRESHOLD = 50;
+
+    function compliance(belief) {
+      if (belief > THRESHOLD + 8) return 0.97;
+      if (belief < THRESHOLD - 8) return 0.02;
+      // sigmoid transition around threshold
+      const t = (belief - (THRESHOLD - 8)) / 16;
+      return 0.02 + 0.95 * (1 / (1 + Math.exp(-10 * (t - 0.5))));
+    }
+
+    function draw(currentBelief) {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#faf9f7';
+      ctx.fillRect(0, 0, W, H);
+
+      // Grid
+      [0, 0.25, 0.5, 0.75, 1].forEach(v => {
+        const y = pad.t + ch - v * ch;
+        ctx.strokeStyle = '#eee'; ctx.lineWidth = 0.5;
+        ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + cw, y); ctx.stroke();
+        ctx.fillStyle = '#bbb'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+        ctx.fillText(Math.round(v * 100) + '%', pad.l - 6, y + 4);
+      });
+
+      // x axis ticks (belief %)
+      [0, 25, 50, 75, 100].forEach(v => {
+        const x = pad.l + (v / 100) * cw;
+        ctx.fillStyle = '#bbb'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(v + '%', x, pad.t + ch + 16);
+      });
+
+      // Axes
+      ctx.strokeStyle = '#ddd'; ctx.lineWidth = 0.8;
+      ctx.beginPath(); ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, pad.t + ch); ctx.lineTo(pad.l + cw, pad.t + ch); ctx.stroke();
+
+      // Axis labels
+      ctx.fillStyle = '#aaa'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('Private belief →', pad.l + cw / 2, pad.t + ch + 30);
+      ctx.save(); ctx.translate(12, pad.t + ch / 2); ctx.rotate(-Math.PI / 2);
+      ctx.fillText('Level', 0, 0); ctx.restore();
+
+      // Threshold line
+      const tipX = pad.l + (THRESHOLD / 100) * cw;
+      ctx.strokeStyle = '#e0ddd8'; ctx.lineWidth = 0.8; ctx.setLineDash([4, 3]);
+      ctx.beginPath(); ctx.moveTo(tipX, pad.t); ctx.lineTo(tipX, pad.t + ch); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#ccc'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('tipping point', tipX, pad.t - 8);
+
+      // Belief line — diagonal from 100% at left to 0% at right
+      ctx.strokeStyle = '#378ADD'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(pad.l, pad.t);
+      ctx.lineTo(pad.l + cw, pad.t + ch);
+      ctx.stroke();
+
+      // Compliance curve
+      ctx.strokeStyle = '#D85A30'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let i = 0; i <= 200; i++) {
+        const b = (i / 200) * 100;
+        const x = pad.l + (b / 100) * cw;
+        const c = compliance(b);
+        const y = pad.t + ch - c * ch;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Current belief marker — vertical line
+      const markerX = pad.l + (currentBelief / 100) * cw;
+      ctx.strokeStyle = '#ccc'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+      ctx.beginPath(); ctx.moveTo(markerX, pad.t); ctx.lineTo(markerX, pad.t + ch); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Belief dot
+      const beliefY = pad.t + ch - (currentBelief / 100) * ch;
+      ctx.fillStyle = '#378ADD';
+      ctx.beginPath(); ctx.arc(markerX, beliefY, 5, 0, Math.PI * 2); ctx.fill();
+
+      // Compliance dot
+      const compVal = compliance(currentBelief);
+      const compY = pad.t + ch - compVal * ch;
+      ctx.fillStyle = '#D85A30';
+      ctx.beginPath(); ctx.arc(markerX, compY, 5, 0, Math.PI * 2); ctx.fill();
+    }
+
+    slider.addEventListener('input', () => {
+      const v = +slider.value;
+      valEl.textContent = v + '%';
+      draw(v);
+    });
+
+    draw(+slider.value);
+  </script>
+</body>
+</html>

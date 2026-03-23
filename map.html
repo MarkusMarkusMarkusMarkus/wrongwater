@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Map — Wrongwater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #faf9f7; font-family: 'EB Garamond', Georgia, serif; }
+    nav {
+      position: fixed; top: 0; left: 0; width: 136px; height: 100vh;
+      padding: 2.8rem 0 2.8rem 1.8rem;
+      display: flex; flex-direction: column; gap: 0.05rem;
+      z-index: 10; background: #faf9f7;
+    }
+    .nav-item {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.53rem;
+      letter-spacing: 0.06em; text-transform: uppercase; padding: 0.25rem 0;
+      text-decoration: none; color: #ccc; pointer-events: none;
+    }
+    .nav-item.active { color: #222; pointer-events: auto; }
+    canvas {
+      position: fixed; top: 0; left: 136px;
+      width: calc(100vw - 136px); height: 100vh;
+      cursor: grab;
+      display: block;
+    }
+    #tip {
+      position: fixed; pointer-events: none; opacity: 0;
+      background: #fffff8; border: 1px solid #ddd; border-radius: 2px;
+      padding: 12px 16px; width: 380px; z-index: 20;
+      transition: opacity 0.15s;
+    }
+    #tip-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 9px;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #aaa; margin-bottom: 5px;
+    }
+    #tip-title { font-size: 16px; font-weight: 500; color: #111; margin-bottom: 8px; line-height: 1.35; font-family: 'EB Garamond', Georgia, serif; }
+    #tip-body { font-size: 15px; color: #444; line-height: 1.65; font-family: 'EB Garamond', Georgia, serif; }
+    #back {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 20;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.48rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: #ccc; text-decoration: none;
+    }
+    #back:hover { color: #222; }
+    #instructions {
+      position: fixed; bottom: 1.5rem; left: 152px; z-index: 20;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.45rem;
+      letter-spacing: 0.06em; color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="nav-item active" href="../index.html">Problem</a>
+    <a class="nav-item">Solution</a>
+  </nav>
+  <canvas id="c"></canvas>
+  <div id="tip">
+    <div id="tip-label"></div>
+    <div id="tip-title"></div>
+    <div id="tip-body"></div>
+  </div>
+  <div id="instructions">drag · scroll to zoom · click to visit</div>
+  <a id="back" href="../index.html">back</a>
+
+  <script>
+  const NODES = [
+    {id:'index',label:'Problem',color:'#7F77DD',x:0,y:0,r:18},
+    {id:'public-language',label:'Public Language',color:'#1D9E75',x:-180,y:-80,r:14},
+    {id:'engineered-language',label:'Engineered Language',color:'#D85A30',x:120,y:-120,r:14},
+    {id:'political-struggle',label:'Political Struggle',color:'#D4537E',x:-60,y:140,r:14},
+    {id:'shared-maps',label:'Shared Maps',color:'#378ADD',x:160,y:80,r:16},
+    {id:'social-reality',label:'Social Reality',color:'#BA7517',x:-160,y:120,r:14},
+    {id:'engineered-names',label:'Engineered Names',color:'#D85A30',x:60,y:-220,r:11},
+    {id:'many-others',label:'Many Others',color:'#D85A30',x:180,y:-280,r:9},
+    {id:'engineered-words',label:'Engineered Words',color:'#D85A30',x:240,y:-180,r:11},
+    {id:'denotation-connotation',label:'Denotation vs Connotation',color:'#D85A30',x:340,y:-240,r:9},
+    {id:'examples-words',label:'Examples',color:'#D85A30',x:360,y:-140,r:9},
+    {id:'engineered-concepts',label:'Engineered Concepts',color:'#D85A30',x:180,y:-60,r:11},
+    {id:'legitimacy',label:'Legitimacy & Authority',color:'#BA7517',x:-280,y:80,r:11},
+    {id:'interlocking-expectations',label:'Interlocking Expectations',color:'#BA7517',x:-300,y:200,r:11},
+    {id:'map-territory',label:'Map & Territory',color:'#378ADD',x:300,y:140,r:11},
+    {id:'concepts',label:'Concepts',color:'#378ADD',x:280,y:40,r:11},
+    {id:'material-social',label:'Material vs Social Reality',color:'#378ADD',x:380,y:220,r:11},
+    {id:'map-is-territory',label:'The Map is the Territory',color:'#378ADD',x:200,y:220,r:11},
+  ];
+  const EDGES = [
+    ['index','public-language'],['index','engineered-language'],
+    ['index','political-struggle'],['index','shared-maps'],['index','social-reality'],
+    ['public-language','shared-maps'],['public-language','engineered-language'],
+    ['engineered-language','engineered-names'],['engineered-language','engineered-words'],
+    ['engineered-language','engineered-concepts'],
+    ['engineered-names','many-others'],
+    ['engineered-words','denotation-connotation'],['engineered-words','examples-words'],
+    ['engineered-concepts','concepts'],['engineered-concepts','engineered-names'],['engineered-concepts','engineered-words'],
+    ['political-struggle','shared-maps'],['political-struggle','social-reality'],
+    ['social-reality','shared-maps'],['social-reality','legitimacy'],
+    ['legitimacy','interlocking-expectations'],
+    ['interlocking-expectations','political-struggle'],['interlocking-expectations','social-reality'],
+    ['shared-maps','concepts'],['shared-maps','public-language'],['shared-maps','map-territory'],
+    ['map-territory','concepts'],['map-territory','material-social'],['map-territory','map-is-territory'],
+    ['material-social','shared-maps'],['material-social','map-is-territory'],
+    ['map-is-territory','social-reality'],['map-is-territory','public-language'],
+    ['concepts','shared-maps'],['concepts','engineered-concepts'],
+  ];
+  const PAGES = {
+    'index':{label:'Problem',title:'Good private reasoning is difficult.',body:'Private thought relies on public language, and public language has been shaped by political struggle over the shared maps that organize social reality.'},
+    'public-language':{label:'Public Language',title:'Most of the language you use, you did not invent.',body:'Words are socially evolved tools for coordination and persuasion — reused inside our minds as instruments of thought.'},
+    'engineered-language':{label:'Engineered Language',title:'Sometimes the word comes before the thing.',body:'Language can be deliberately created or spread to shape how patterns are perceived — by relabeling, recoloring, or redrawing the map.'},
+    'engineered-names':{label:'Engineered Names',title:'The name leads your mind along a path of least resistance.',body:'Is OpenAI open? The label creates the illusion of knowledge.'},
+    'many-others':{label:'Many Others',title:'A partial list.',body:'OpenAI, Patriot Act, Enhanced Interrogation, Collateral Damage... The list is not politically sorted. That is the point.'},
+    'engineered-words':{label:'Engineered Words',title:'You do not always need to change what people look at.',body:'"He is firm." "He is obstinate." "He is pig-headed." Same trait, different evaluative coloring.'},
+    'denotation-connotation':{label:'Denotation vs Connotation',title:'Words point and suggest.',body:'Denotation is what a word refers to. Connotation is the halo of feelings and judgments that gather around it.'},
+    'examples-words':{label:'Examples',title:'Same thing, different word.',body:'homeless / unhoused — torture / enhanced interrogation — regime / government — terrorist / freedom fighter.'},
+    'engineered-concepts':{label:'Engineered Concepts',title:'Engineered concepts reorganize reality in advance.',body:'"Microaggression" extends the force of aggression to smaller acts. Part of the conclusion is smuggled into the term itself.'},
+    'political-struggle':{label:'Political Struggle',title:'Political struggle can be carried out through language.',body:'Struggle extends into conflict over the shared maps through which social reality is interpreted.'},
+    'social-reality':{label:'Social Reality',title:'Social reality determines what people treat as real.',body:'Shared maps determine who counts as a ruler, who commands the army, who gets obeyed.'},
+    'legitimacy':{label:'Legitimacy & Authority',title:'Legitimacy is a social equilibrium.',body:'What holds the system together is often not conviction but the expectation of others\' conviction.'},
+    'interlocking-expectations':{label:'Interlocking Expectations',title:'Social orders decay slowly but collapse quickly.',body:'First-order belief weakens quietly. Public behavior continues because everyone expects everyone else to go along. Then it tips.'},
+    'shared-maps':{label:'Shared Maps',title:'Social life depends on overlapping maps.',body:'Shared maps are mental maps that overlap enough across sufficient people to make communication and coordination possible.'},
+    'map-territory':{label:'Map & Territory',title:'The map is not the territory — except when it is.',body:'In material reality, the map is not the territory. In social reality, the shared map is the territory.'},
+    'concepts':{label:'Concepts',title:'Concepts determine what we see.',body:'The rabbit-duck illusion: the image never changes, only the concept you apply to it changes.'},
+    'material-social':{label:'Material vs Social Reality',title:'Material reality does not go away when you stop believing in it.',body:'Social reality is the opposite — money, laws, borders exist only insofar as enough people treat them as real.'},
+    'map-is-territory':{label:'The Map is the Territory',title:'In social reality, shared maps constitute the territory.',body:'Maps do not merely describe the world — they are how the world gets made.'},
+  };
+
+  const canvas = document.getElementById('c');
+  const tip = document.getElementById('tip');
+  const dpr = window.devicePixelRatio || 1;
+  let W = window.innerWidth - 136;
+  let H = window.innerHeight;
+  let ctx;
+  let pan = {x: W/2, y: H/2};
+  let zoom = 1;
+  let dragging = false, lastMouse = null, hovered = null;
+
+  function initCanvas() {
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#faf9f7';
+    ctx.fillRect(0, 0, W, H);
+
+    EDGES.forEach(([a,b]) => {
+      const na = NODES.find(n => n.id===a);
+      const nb = NODES.find(n => n.id===b);
+      if (!na || !nb) return;
+      const sx = na.x*zoom + pan.x, sy = na.y*zoom + pan.y;
+      const ex = nb.x*zoom + pan.x, ey = nb.y*zoom + pan.y;
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.lineTo(ex, ey);
+      const isActive = hovered && (hovered.id===a || hovered.id===b);
+      ctx.strokeStyle = isActive ? 'rgba(50,50,40,0.6)' : 'rgba(80,80,70,0.3)';
+      ctx.lineWidth = isActive ? 1.5 : 0.8;
+      ctx.stroke();
+    });
+
+    NODES.forEach(n => {
+      const sx = n.x*zoom + pan.x, sy = n.y*zoom + pan.y;
+      const r = n.r * zoom;
+      const isHov = hovered && hovered.id === n.id;
+
+      ctx.beginPath();
+      ctx.arc(sx, sy, r, 0, Math.PI*2);
+      ctx.fillStyle = n.color;
+      ctx.globalAlpha = isHov ? 1 : 0.85;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+
+      if (zoom > 0.5 || isHov) {
+        const fs = Math.max(9, Math.min(13, 11*zoom));
+        ctx.font = `${isHov ? 500 : 400} ${fs}px sans-serif`;
+        ctx.fillStyle = '#111';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.globalAlpha = isHov ? 1 : Math.min(1, zoom * 1.2);
+        const words = n.label.split(' ');
+        const lh = fs * 1.3;
+        let lines = [], cur = '';
+        words.forEach(w => {
+          const test = cur ? cur + ' ' + w : w;
+          if (ctx.measureText(test).width > 85*zoom && cur) { lines.push(cur); cur = w; }
+          else cur = test;
+        });
+        lines.push(cur);
+        lines.forEach((line, i) => { ctx.fillText(line, sx, sy + r + 5 + i*lh); });
+        ctx.globalAlpha = 1;
+      }
+    });
+  }
+
+  function getHovered(mx, my) {
+    const wx = (mx - pan.x) / zoom;
+    const wy = (my - pan.y) / zoom;
+    return NODES.find(n => {
+      const dx = n.x - wx, dy = n.y - wy;
+      return Math.sqrt(dx*dx + dy*dy) < n.r / zoom * 1.8;
+    }) || null;
+  }
+
+  canvas.addEventListener('mousemove', e => {
+    const mx = e.clientX - 136, my = e.clientY;
+    if (dragging && lastMouse) {
+      pan.x += mx - lastMouse.x;
+      pan.y += my - lastMouse.y;
+      lastMouse = {x: mx, y: my};
+      draw(); return;
+    }
+    const h = getHovered(mx, my);
+    if (h !== hovered) { hovered = h; draw(); }
+    if (h) {
+      canvas.style.cursor = 'pointer';
+      const d = PAGES[h.id];
+      if (d) {
+        document.getElementById('tip-label').textContent = d.label;
+        document.getElementById('tip-title').textContent = d.title;
+        document.getElementById('tip-body').textContent = d.body;
+      }
+      tip.style.opacity = '1';
+      const tx = e.clientX + 16;
+      const ty = Math.max(10, e.clientY - 80);
+      tip.style.left = (tx + 380 > window.innerWidth ? e.clientX - 396 : tx) + 'px';
+      tip.style.top = ty + 'px';
+    } else {
+      canvas.style.cursor = dragging ? 'grabbing' : 'grab';
+      tip.style.opacity = '0';
+    }
+  });
+
+  canvas.addEventListener('mousedown', e => {
+    dragging = true;
+    lastMouse = {x: e.clientX - 136, y: e.clientY};
+    canvas.style.cursor = 'grabbing';
+  });
+
+  canvas.addEventListener('mouseup', e => {
+    const mx = e.clientX - 136, my = e.clientY;
+    if (lastMouse && Math.abs(mx - lastMouse.x) < 4 && Math.abs(my - lastMouse.y) < 4) {
+      const h = getHovered(mx, my);
+      if (h) window.location.href = 'problem/' + h.id + '.html';
+    }
+    dragging = false; lastMouse = null;
+    canvas.style.cursor = 'grab';
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    dragging = false; hovered = null; tip.style.opacity = '0'; draw();
+  });
+
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    const mx = e.clientX - 136, my = e.clientY;
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    const nz = Math.max(0.3, Math.min(3, zoom * delta));
+    pan.x = mx - (mx - pan.x) * (nz / zoom);
+    pan.y = my - (my - pan.y) * (nz / zoom);
+    zoom = nz;
+    draw();
+  }, {passive: false});
+
+  window.addEventListener('resize', () => {
+    W = window.innerWidth - 136;
+    H = window.innerHeight;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.scale(dpr, dpr);
+    draw();
+  });
+
+  initCanvas();
+  draw();
+  </script>
+</body>
+</html>

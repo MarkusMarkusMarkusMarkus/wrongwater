@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Belief & Existence</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0a0a0a; color: #c2c0b6; font-family: 'Georgia', serif; padding: 2rem; }
+    h2 {
+      text-align: center; font-size: 0.7rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: #666; margin-bottom: 2rem; font-weight: 400;
+    }
+    .charts { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; }
+    .chart-wrap {
+      flex: 1; min-width: 260px; max-width: 340px;
+    }
+    .chart-title {
+      font-family: Georgia, serif; font-style: italic;
+      font-size: 1.1rem; color: #e8e4d8; text-align: center; margin-bottom: 0.3rem;
+    }
+    .chart-sub {
+      font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #444; text-align: center; margin-bottom: 1rem;
+    }
+    canvas { display: block; width: 100%; }
+    .controls {
+      margin-top: 0.8rem; display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: #555;
+    }
+    input[type=range] {
+      flex: 1; accent-color: #888;
+      height: 2px; background: #333; outline: none; cursor: pointer;
+    }
+    .val { min-width: 32px; text-align: right; color: #888; }
+    .status {
+      margin-top: 0.6rem; text-align: center; font-size: 0.65rem;
+      letter-spacing: 0.06em; text-transform: uppercase; min-height: 1.2em;
+    }
+    .caption {
+      text-align: center; font-style: italic; font-size: 0.75rem;
+      color: #555; margin-top: 2rem; line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <h2>Belief & Existence</h2>
+  <div class="charts">
+
+    <div class="chart-wrap">
+      <div class="chart-title">Material Reality</div>
+      <div class="chart-sub">Non-reflexive</div>
+      <canvas id="c1" width="300" height="180"></canvas>
+      <div class="controls">
+        <span>Belief</span>
+        <input type="range" id="s1" min="0" max="100" value="50">
+        <span class="val" id="v1">50%</span>
+      </div>
+      <div class="status" id="st1" style="color:#5DCAA5">EXISTS — independent of belief</div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="chart-title">Social Reality</div>
+      <div class="chart-sub">Reflexive</div>
+      <canvas id="c2" width="300" height="180"></canvas>
+      <div class="controls">
+        <span>Belief</span>
+        <input type="range" id="s2" min="0" max="100" value="70">
+        <span class="val" id="v2">70%</span>
+      </div>
+      <div class="status" id="st2" style="color:#5DCAA5">EXISTS — belief above threshold</div>
+    </div>
+
+  </div>
+  <p class="caption">A mountain exists whether or not you believe in it.<br>A bank exists only insofar as enough people do.</p>
+
+  <script>
+    const THRESHOLD = 50;
+
+    function drawMaterial(canvas, belief) {
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const pad = { t: 20, r: 20, b: 30, l: 40 };
+      const cw = W - pad.l - pad.r;
+      const ch = H - pad.t - pad.b;
+
+      // axes
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(pad.l, pad.t);
+      ctx.lineTo(pad.l, pad.t + ch);
+      ctx.lineTo(pad.l + cw, pad.t + ch);
+      ctx.stroke();
+
+      // axis labels
+      ctx.fillStyle = '#444';
+      ctx.font = '9px sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText('YES', pad.l - 4, pad.t + 6);
+      ctx.fillText('NO', pad.l - 4, pad.t + ch);
+      ctx.textAlign = 'center';
+      ctx.fillText('0%', pad.l, pad.t + ch + 14);
+      ctx.fillText('50%', pad.l + cw/2, pad.t + ch + 14);
+      ctx.fillText('100%', pad.l + cw, pad.t + ch + 14);
+      ctx.fillText('% believing →', pad.l + cw/2, pad.t + ch + 26);
+
+      // flat line — always exists
+      const y = pad.t + ch * 0.15;
+      ctx.strokeStyle = '#5DCAA5';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(pad.l, y);
+      ctx.lineTo(pad.l + cw, y);
+      ctx.stroke();
+
+      // belief marker
+      const bx = pad.l + (belief / 100) * cw;
+      ctx.fillStyle = '#EF9F27';
+      ctx.beginPath();
+      ctx.arc(bx, y, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // dashed vertical
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 0.5;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(bx, pad.t);
+      ctx.lineTo(bx, pad.t + ch);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    function drawSocial(canvas, belief) {
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const pad = { t: 20, r: 20, b: 30, l: 40 };
+      const cw = W - pad.l - pad.r;
+      const ch = H - pad.t - pad.b;
+      const exists = belief >= THRESHOLD;
+
+      // axes
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(pad.l, pad.t);
+      ctx.lineTo(pad.l, pad.t + ch);
+      ctx.lineTo(pad.l + cw, pad.t + ch);
+      ctx.stroke();
+
+      // axis labels
+      ctx.fillStyle = '#444';
+      ctx.font = '9px sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText('YES', pad.l - 4, pad.t + 6);
+      ctx.fillText('NO', pad.l - 4, pad.t + ch);
+      ctx.textAlign = 'center';
+      ctx.fillText('0%', pad.l, pad.t + ch + 14);
+      ctx.fillText('50%', pad.l + cw/2, pad.t + ch + 14);
+      ctx.fillText('100%', pad.l + cw, pad.t + ch + 14);
+      ctx.fillText('% believing →', pad.l + cw/2, pad.t + ch + 26);
+
+      // threshold line
+      const tx = pad.l + (THRESHOLD / 100) * cw;
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 0.5;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.moveTo(tx, pad.t);
+      ctx.lineTo(tx, pad.t + ch);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // step function
+      const yHigh = pad.t + ch * 0.15;
+      const yLow = pad.t + ch * 0.85;
+      ctx.strokeStyle = '#5DCAA5';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(pad.l, yLow);
+      ctx.lineTo(tx, yLow);
+      ctx.lineTo(tx, yHigh);
+      ctx.lineTo(pad.l + cw, yHigh);
+      ctx.stroke();
+
+      // belief marker
+      const bx = pad.l + (belief / 100) * cw;
+      const by = belief >= THRESHOLD ? yHigh : yLow;
+      ctx.fillStyle = '#EF9F27';
+      ctx.beginPath();
+      ctx.arc(bx, by, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // dashed vertical
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 0.5;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(bx, pad.t);
+      ctx.lineTo(bx, pad.t + ch);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // threshold label
+      ctx.fillStyle = '#444';
+      ctx.font = '8px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('50%', tx, pad.t + ch * 0.5);
+    }
+
+    function update1() {
+      const v = +document.getElementById('s1').value;
+      document.getElementById('v1').textContent = v + '%';
+      drawMaterial(document.getElementById('c1'), v);
+      document.getElementById('st1').textContent = 'EXISTS — independent of belief';
+      document.getElementById('st1').style.color = '#5DCAA5';
+    }
+
+    function update2() {
+      const v = +document.getElementById('s2').value;
+      document.getElementById('v2').textContent = v + '%';
+      drawSocial(document.getElementById('c2'), v);
+      const exists = v >= THRESHOLD;
+      document.getElementById('st2').textContent = exists
+        ? 'EXISTS — belief above threshold'
+        : 'COLLAPSES — belief below 50%';
+      document.getElementById('st2').style.color = exists ? '#5DCAA5' : '#E24B4A';
+    }
+
+    document.getElementById('s1').addEventListener('input', update1);
+    document.getElementById('s2').addEventListener('input', update2);
+    update1(); update2();
+  </script>
+</body>
+</html>
