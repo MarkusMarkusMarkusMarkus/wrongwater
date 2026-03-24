@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Engineered Names</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&amp;family=DM+Sans:ital,wght@0,400;0,600;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
     
@@ -181,7 +182,7 @@
 <body>
   
   <nav>
-    <a class="nav-item active" href="/">Problem</a>
+    <a class="nav-item active" href="../index.html">Problem</a>
     <a class="nav-item" href="#">Solution</a>
 
 
@@ -190,17 +191,17 @@
   <main>
     <div class="content">
       
-  <h1 style="">Names can lead your mind along a path of least resistance.</h1>
-  <p style="">Is OpenAI open?</p>
-  <p style="">It feels that the answer must be "Yes". It's right there in the name "OpenAI". Which is kind of the point: the name leads your mind toward a conclusion someone wanted you to reach. Not, necessarily, toward the truth.</p>
-  <p style="">If I asked instead whether "XQ-17 Holdings" was open, you would immediately realize you don't know. But "OpenAI" makes you feel as though you do. The label created the illusion of knowledge.</p>
-  <p style="">The company being named "OpenAI" doesn't tell you anything about whether it is open. It tells you whoever named it decided to name it that way. That's it.</p>
+  <h1>The name leads your mind along a path of least resistance.</h1>
+  <p>Is OpenAI open?</p>
+  <p>It feels that the answer must be "Yes". It's right there in the name "OpenAI". Which is kind of the point: the name leads your mind toward a conclusion someone wanted you to reach. Not, necessarily, toward the truth.</p>
+  <p>If I asked instead whether "XQ-17 Holdings" was open, you would immediately realize you don't know. But "OpenAI" makes you feel as though you do. The label created the illusion of knowledge.</p>
+  <p>The company being named "OpenAI" doesn't tell you anything about whether it is open. It tells you whoever named it decided to name it that way. That's it.</p>
 
-  <p style=""><br></p>
-  <p style="">A more distant example: is the "Democratic Republic of North Korea" democratic? No. Yet it has "Democratic" right in the name. Almost as if sometimes the name was chosen to lead our minds along a path of least resistance toward a conclusion someone wanted us to reach.</p>
-  <p style="">Notice how the questions themselves sound like contradictions — as if you are somehow wrong to ask them. Can OpenAI be&nbsp;<em>not</em> open? Can the Democratic Republic of North Korea be&nbsp;<em>not</em> democratic? That discomfort is the engineering working as intended.</p>
-  <p style="">See also: <span class="tlink" data-key="many-others">many other examples</span>.</p>
-      <img src="img-openai-boxes.png" alt="" style="max-width: 100%; margin: 1.5rem 0; display: block;">
+  <p>And now you know what you don't know. You have grown wiser, like Socrates.</p>
+  <p>A more distant example: is the "Democratic Republic of North Korea" democratic? No. Yet it has "Democratic" right in the name. Almost as if sometimes the name was chosen to lead our minds along a path of least resistance toward a conclusion someone wanted us to reach.</p>
+  <p>Notice how the questions themselves sound like contradictions — as if you are somehow wrong to ask them. Is OpenAI <em>not</em> open? Is the Democratic Republic of North Korea <em>not</em> democratic? That discomfort is the engineering working as intended.</p>
+  <p>See also: <span class="tlink" data-key="many-others">many other examples</span>.</p>
+      <iframe src="img-openai-boxes.html" style="width:100%;height:280px;border:none;margin:1.5rem 0;display:block;" scrolling="no"></iframe>
       <img src="img-engineered-names-map.png" alt="" style="max-width: 100%; margin: 1.5rem 0; display: block;">
     </div>
   </main>
@@ -212,54 +213,12 @@
     </div>
     <div class="preview-body" id="preview-body"></div>
     <div class="preview-footer">
-      <a class="preview-link" id="preview-link" href="#">Read full page →</a>
+      <a class="preview-link" id="preview-link" href="#">Read full page &#8594;</a>
     </div>
   </div>
 
   
   <script src="tooltip_engine.js"></script>
 
-
-  <script>
-  (function() {
-    if (new URLSearchParams(window.location.search).get('edit') !== 'true') return;
-
-    const bar = document.createElement('div');
-    bar.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;gap:0.6rem;align-items:center;';
-
-    const label = document.createElement('span');
-    label.textContent = 'Edit mode';
-    label.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.45rem;letter-spacing:0.1em;text-transform:uppercase;color:#999;';
-
-    const btn = document.createElement('button');
-    btn.textContent = 'Copy HTML';
-    btn.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.45rem;letter-spacing:0.08em;text-transform:uppercase;background:#1a4a8a;color:#fff;border:none;padding:0.4rem 0.8rem;cursor:pointer;border-radius:2px;';
-    btn.onclick = function() {
-      // Remove edit mode indicators before copying
-      document.querySelectorAll('.content h1, .content p').forEach(function(el) {
-        el.removeAttribute('contenteditable');
-        el.style.borderBottom = '';
-        el.style.outline = '';
-      });
-      const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-      navigator.clipboard.writeText(html).then(function() {
-        btn.textContent = 'Copied!';
-        setTimeout(function() { btn.textContent = 'Copy HTML'; }, 2000);
-      });
-    };
-
-    bar.appendChild(label);
-    bar.appendChild(btn);
-    document.body.appendChild(bar);
-
-    document.querySelectorAll('.content h1, .content p').forEach(function(el) {
-      el.contentEditable = 'true';
-      el.style.outline = 'none';
-      el.style.borderBottom = '1px dashed #ccc';
-      el.addEventListener('focus', function() { el.style.borderBottom = '1px dashed #1a4a8a'; });
-      el.addEventListener('blur', function() { el.style.borderBottom = '1px dashed #ccc'; });
-    });
-  })();
-  </script><div style="position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; gap: 0.6rem; align-items: center;"><span style="font-family: &quot;JetBrains Mono&quot;, monospace; font-size: 0.45rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(153, 153, 153);">Edit mode</span><button style="font-family: &quot;JetBrains Mono&quot;, monospace; font-size: 0.45rem; letter-spacing: 0.08em; text-transform: uppercase; background: rgb(26, 74, 138); color: rgb(255, 255, 255); border: none; padding: 0.4rem 0.8rem; cursor: pointer; border-radius: 2px;">Copy HTML</button></div>
-
-</body></html>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<style>* { margin:0;padding:0;box-sizing:border-box; } body { background:#faf9f7;display:flex;align-items:center;justify-content:center;padding:2rem 1.5rem; }</style>
+</head><body>
+<svg viewBox="0 0 560 280" style="max-width:560px;width:100%">
+
+  <!-- LEFT CUBE -->
+  <!-- front face -->
+  <rect x="30" y="70" width="150" height="150" fill="#0a0a0a"/>
+  <!-- top face -->
+  <polygon points="30,70 75,35 225,35 180,70" fill="#2a2a2a"/>
+  <!-- right face -->
+  <polygon points="180,70 225,35 225,185 180,220" fill="#161616"/>
+  <!-- white edge lines -->
+  <polyline points="30,70 75,35 225,35 225,185 180,220 180,70 30,70" fill="none" stroke="white" stroke-width="1"/>
+  <line x1="75" y1="35" x2="180" y2="70" stroke="white" stroke-width="1"/>
+  <line x1="180" y1="70" x2="180" y2="220" stroke="white" stroke-width="1"/>
+  <line x1="30" y1="220" x2="180" y2="220" stroke="white" stroke-width="0.5" opacity="0.3"/>
+  <line x1="30" y1="70" x2="30" y2="220" stroke="white" stroke-width="0.5" opacity="0.3"/>
+
+  <!-- RIGHT CUBE -->
+  <!-- front face -->
+  <rect x="330" y="70" width="150" height="150" fill="#0a0a0a"/>
+  <!-- top face -->
+  <polygon points="330,70 375,35 525,35 480,70" fill="#2a2a2a"/>
+  <!-- right face -->
+  <polygon points="480,70 525,35 525,185 480,220" fill="#161616"/>
+  <!-- white edge lines -->
+  <polyline points="330,70 375,35 525,35 525,185 480,220 480,70 330,70" fill="none" stroke="white" stroke-width="1"/>
+  <line x1="375" y1="35" x2="480" y2="70" stroke="white" stroke-width="1"/>
+  <line x1="480" y1="70" x2="480" y2="220" stroke="white" stroke-width="1"/>
+  <line x1="330" y1="220" x2="480" y2="220" stroke="white" stroke-width="0.5" opacity="0.3"/>
+  <line x1="330" y1="70" x2="330" y2="220" stroke="white" stroke-width="0.5" opacity="0.3"/>
+  <!-- label on front face, centered -->
+  <text font-family="Georgia,serif" font-size="18" fill="white" font-weight="bold" text-anchor="middle" x="405" y="152">"OpenAI"</text>
+
+  <!-- Captions -->
+  <text font-family="Georgia,serif" font-size="13" fill="#888" x="105" y="255" text-anchor="middle">Black box.</text>
+  <text font-family="Georgia,serif" font-size="13" fill="#888" x="405" y="250" text-anchor="middle">Same exact black box,</text>
+  <text font-family="Georgia,serif" font-size="13" fill="#888" x="405" y="268" text-anchor="middle">but now with a label on it.</text>
+
+</svg>
+</body></html>
