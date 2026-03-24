@@ -248,7 +248,14 @@
     const mx = e.clientX - 136, my = e.clientY;
     if (lastMouse && Math.abs(mx - lastMouse.x) < 4 && Math.abs(my - lastMouse.y) < 4) {
       const h = getHovered(mx, my);
-      if (h) window.location.href = 'problem/' + h.id + '.html';
+      if (h) {
+        const url = h.id === 'index' ? '/' : 'problem/' + h.id + '.html';
+        if (e.metaKey || e.ctrlKey) {
+          window.open(url, '_blank');
+        } else {
+          window.location.href = url;
+        }
+      }
     }
     dragging = false; lastMouse = null;
     canvas.style.cursor = 'grab';
