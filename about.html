@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wrongwater — About</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #faf9f7;
+      --text: #1a1a1a;
+      --text-muted: #999;
+      --link: #1a4a8a;
+      --link-hover: #0d2e5c;
+      --underline: rgba(26, 74, 138, 0.35);
+    }
+
+    html { font-size: 20px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'EB Garamond', Georgia, serif;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    .top-nav {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      z-index: 50;
+    }
+
+    .top-nav-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--text-muted);
+    }
+    .top-nav-item:hover { color: var(--link); }
+
+    main {
+      display: flex;
+      justify-content: center;
+      padding: 6rem 2rem 6rem 2rem;
+    }
+
+    .content { max-width: 560px; width: 100%; }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      margin-bottom: 1.4em;
+    }
+
+    h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 2.4rem 0 1rem;
+      font-weight: 400;
+    }
+
+    ul { list-style: none; margin-bottom: 1.4em; }
+
+    ul li {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      padding-left: 1.2em;
+      position: relative;
+    }
+
+    ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--text-muted);
+    }
+
+    a {
+      color: var(--link);
+      text-decoration: underline;
+      text-decoration-color: var(--underline);
+      text-underline-offset: 3px;
+    }
+    a:hover { color: var(--link-hover); }
+
+    .footer {
+      margin-top: 3rem;
+    }
+
+    .footer p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 0.3em;
+    }
+
+    .footer a {
+      color: var(--text-muted);
+      text-decoration-color: rgba(0,0,0,0.15);
+    }
+    .footer a:hover { color: var(--link); }
+
+    @media (max-width: 768px) {
+      .top-nav { top: 1.2rem; right: 1.2rem; }
+      main { padding: 4rem 1.2rem 4rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-nav">
+    <a class="top-nav-item" href="index.html">← Back</a>
+  </div>
+
+  <main>
+    <div class="content">
+
+      <p>Wrongwater is a research wiki on the relationship between the adversarial use of language and social reality.</p>
+
+
+
+      <div class="footer">
+        <p>Made by <a href="https://x.com/nosilverv" target="_blank">@nosilverv</a>.</p>
+        <p>This work was made possible by the generous support of KANRO & Vitalik Buterin.</p>
+
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>
