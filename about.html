@@ -49,7 +49,9 @@
     main {
       display: flex;
       justify-content: center;
-      padding: 6rem 2rem 6rem 2rem;
+      align-items: center;
+      min-height: 100vh;
+      padding: 4rem 2rem;
     }
 
     .content { max-width: 560px; width: 100%; }
@@ -60,42 +62,14 @@
       margin-bottom: 1.4em;
     }
 
-    h2 {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.5rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin: 2.4rem 0 1rem;
-      font-weight: 400;
-    }
-
-    ul { list-style: none; margin-bottom: 1.4em; }
-
-    ul li {
-      font-size: 1.1rem;
-      line-height: 1.8;
-      padding-left: 1.2em;
-      position: relative;
-    }
-
-    ul li::before {
-      content: '—';
-      position: absolute;
-      left: 0;
-      color: var(--text-muted);
-    }
-
-    a {
-      color: var(--link);
-      text-decoration: underline;
-      text-decoration-color: var(--underline);
-      text-underline-offset: 3px;
-    }
-    a:hover { color: var(--link-hover); }
-
     .footer {
-      margin-top: 3rem;
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 560px;
+      padding: 0 2rem;
     }
 
     .footer p {
@@ -125,19 +99,14 @@
 
   <main>
     <div class="content">
-
       <p>Wrongwater is a research wiki on the relationship between the adversarial use of language and social reality.</p>
-
-
-
-      <div class="footer">
-        <p>Made by <a href="https://x.com/nosilverv" target="_blank">@nosilverv</a>.</p>
-        <p>This work was made possible by the generous support of KANRO & Vitalik Buterin.</p>
-
-      </div>
-
     </div>
   </main>
+
+  <div class="footer">
+    <p>Made by <a href="https://x.com/nosilverv" target="_blank">@nosilverv</a>.</p>
+    <p>This work was made possible by the generous support of KANRO & Vitalik Buterin.</p>
+  </div>
 
 </body>
 </html>
