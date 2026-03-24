@@ -6,9 +6,8 @@
   const previewBody = document.getElementById('preview-body');
   const previewLink = document.getElementById('preview-link');
   if (!preview) return;
-
   let hideTimeout = null;
-  let activeTouch = null; // track which link was last tapped on mobile
+  let activeTouch = null;
 
   async function fetchPage(key) {
     if (cache[key]) return cache[key];
@@ -36,7 +35,7 @@
 
   function position(el) {
     const isMobile = window.innerWidth <= 768;
-    if (isMobile) return; // mobile CSS handles positioning via fixed bottom
+    if (isMobile) return;
     const rect = el.getBoundingClientRect();
     const m = 12, pw = 360;
     let top = rect.bottom + m;
@@ -58,7 +57,6 @@
     previewBody.innerHTML = '';
     previewLink.href = key + '.html';
     position(el);
-
     const data = await fetchPage(key);
     previewLabel.textContent = data.label;
     previewTitle.textContent = data.title;
@@ -74,19 +72,22 @@
     }, 220);
   }
 
-  // Desktop: hover
   document.querySelectorAll('.tlink').forEach(el => {
     el.addEventListener('mouseenter', () => show(el, el.dataset.key));
     el.addEventListener('mouseleave', hide);
 
-    // Desktop click navigates
     el.addEventListener('click', e => {
       if (window.innerWidth > 768) {
-        window.location.href = el.dataset.key + '.html';
+        e.preventDefault();
+        const url = el.dataset.key + '.html';
+        if (e.metaKey || e.ctrlKey) {
+          window.open(url, '_blank');
+        } else {
+          window.location.href = url;
+        }
       }
     });
 
-    // Mobile: first tap shows preview, second tap navigates
     el.addEventListener('touchend', e => {
       e.preventDefault();
       if (activeTouch === el.dataset.key && preview.classList.contains('visible')) {
@@ -98,7 +99,6 @@
     });
   });
 
-  // Close preview when tapping outside on mobile
   document.addEventListener('touchend', e => {
     if (!preview.contains(e.target) && !e.target.classList.contains('tlink')) {
       hide();
