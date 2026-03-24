@@ -38,7 +38,6 @@
     <span class="val" id="val">85%</span>
   </div>
   <div class="legend">
-    <span><span class="dot" style="background:#378ADD;display:inline-block;"></span>Private belief</span>
     <span><span class="dot" style="background:#D85A30;display:inline-block;"></span>Performed compliance</span>
   </div>
 
@@ -89,8 +88,6 @@
       // Axis labels
       ctx.fillStyle = '#aaa'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
       ctx.fillText('Private belief →', pad.l + cw / 2, pad.t + ch + 30);
-      ctx.save(); ctx.translate(12, pad.t + ch / 2); ctx.rotate(-Math.PI / 2);
-      ctx.fillText('Level', 0, 0); ctx.restore();
 
       // Threshold line
       const tipX = pad.l + (THRESHOLD / 100) * cw;
@@ -99,13 +96,6 @@
       ctx.setLineDash([]);
       ctx.fillStyle = '#ccc'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
       ctx.fillText('tipping point', tipX, pad.t - 8);
-
-      // Belief line — diagonal from 100% at left to 0% at right
-      ctx.strokeStyle = '#378ADD'; ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(pad.l, pad.t);
-      ctx.lineTo(pad.l + cw, pad.t + ch);
-      ctx.stroke();
 
       // Compliance curve
       ctx.strokeStyle = '#D85A30'; ctx.lineWidth = 2;
@@ -124,11 +114,6 @@
       ctx.strokeStyle = '#ccc'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
       ctx.beginPath(); ctx.moveTo(markerX, pad.t); ctx.lineTo(markerX, pad.t + ch); ctx.stroke();
       ctx.setLineDash([]);
-
-      // Belief dot
-      const beliefY = pad.t + ch - (currentBelief / 100) * ch;
-      ctx.fillStyle = '#378ADD';
-      ctx.beginPath(); ctx.arc(markerX, beliefY, 5, 0, Math.PI * 2); ctx.fill();
 
       // Compliance dot
       const compVal = compliance(currentBelief);

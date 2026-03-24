@@ -221,5 +221,47 @@
   
   <script src="tooltip_engine.js"></script>
 
+
+  <script>
+  (function() {
+    if (new URLSearchParams(window.location.search).get('edit') !== 'true') return;
+
+    const bar = document.createElement('div');
+    bar.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;gap:0.6rem;align-items:center;';
+
+    const label = document.createElement('span');
+    label.textContent = 'Edit mode';
+    label.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.45rem;letter-spacing:0.1em;text-transform:uppercase;color:#999;';
+
+    const btn = document.createElement('button');
+    btn.textContent = 'Copy HTML';
+    btn.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.45rem;letter-spacing:0.08em;text-transform:uppercase;background:#1a4a8a;color:#fff;border:none;padding:0.4rem 0.8rem;cursor:pointer;border-radius:2px;';
+    btn.onclick = function() {
+      // Remove edit mode indicators before copying
+      document.querySelectorAll('.content h1, .content p').forEach(function(el) {
+        el.removeAttribute('contenteditable');
+        el.style.borderBottom = '';
+        el.style.outline = '';
+      });
+      const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      navigator.clipboard.writeText(html).then(function() {
+        btn.textContent = 'Copied!';
+        setTimeout(function() { btn.textContent = 'Copy HTML'; }, 2000);
+      });
+    };
+
+    bar.appendChild(label);
+    bar.appendChild(btn);
+    document.body.appendChild(bar);
+
+    document.querySelectorAll('.content h1, .content p').forEach(function(el) {
+      el.contentEditable = 'true';
+      el.style.outline = 'none';
+      el.style.borderBottom = '1px dashed #ccc';
+      el.addEventListener('focus', function() { el.style.borderBottom = '1px dashed #1a4a8a'; });
+      el.addEventListener('blur', function() { el.style.borderBottom = '1px dashed #ccc'; });
+    });
+  })();
+  </script>
 </body>
 </html>
