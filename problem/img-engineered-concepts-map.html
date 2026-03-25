@@ -2,21 +2,42 @@
 <html><head><meta charset="UTF-8">
 <style>* { margin:0;padding:0;box-sizing:border-box; } body { background:#faf9f7;display:flex;align-items:center;justify-content:center;padding:1.5rem; }</style>
 </head><body>
-<svg viewBox="0 0 560 220" style="max-width:560px;width:100%">
-  <!-- Map rectangle -->
-  <rect x="80" y="60" width="400" height="130" fill="none" stroke="#ccc" stroke-width="1.5"/>
-  <!-- Inner box -->
-  <rect x="80" y="60" width="120" height="80" fill="none" stroke="#ccc" stroke-width="1.5"/>
+<svg viewBox="0 0 560 220" style="max-width:560px;width:100%" font-family="Georgia,serif">
 
-  <!-- Organic/curvy shape above (concept) -->
-  <path d="M 120,15 C 100,5 85,20 90,35 C 88,50 105,55 120,48 C 135,55 152,50 150,35 C 155,20 140,5 120,15 Z" fill="none" stroke="#aaa" stroke-width="1.5"/>
+  <!-- Grid of equal squares: 8 cols × 3 rows, each 50×43 -->
+  <!-- Origin: x=80, y=45 -->
 
-  <!-- Arrows pointing into box -->
-  <line x1="110" y1="55" x2="110" y2="68" stroke="#aaa" stroke-width="1"/>
-  <polygon points="110,72 106,63 114,63" fill="#aaa"/>
-  <line x1="132" y1="55" x2="125" y2="68" stroke="#aaa" stroke-width="1"/>
-  <polygon points="123,72 120,63 128,65" fill="#aaa"/>
+  <!-- Row fills (alternating very faint) -->
+  <!-- All cells plain, grid lines drawn below -->
 
-  <text font-family="Georgia,serif" font-size="13" fill="#888" font-weight="500" x="280" y="210" text-anchor="middle">Map</text>
+  <!-- Vertical grid lines -->
+  <line x1="80"  y1="45" x2="80"  y2="174" stroke="#ccc" stroke-width="1"/>
+  <line x1="130" y1="45" x2="130" y2="174" stroke="#ccc" stroke-width="1"/>
+  <line x1="180" y1="45" x2="180" y2="174" stroke="#ccc" stroke-width="1"/>
+  <line x1="230" y1="45" x2="230" y2="174" stroke="#ccc" stroke-width="1"/>
+  <line x1="280" y1="45" x2="280" y2="174" stroke="#ccc" stroke-width="1"/>
+  <line x1="330" y1="45" x2="330" y2="174" stroke="#ccc" stroke-width="1"/>
+  <line x1="380" y1="45" x2="380" y2="174" stroke="#ccc" stroke-width="1"/>
+  <line x1="430" y1="45" x2="430" y2="174" stroke="#ccc" stroke-width="1"/>
+  <line x1="480" y1="45" x2="480" y2="174" stroke="#ccc" stroke-width="1"/>
+
+  <!-- Horizontal grid lines -->
+  <line x1="80" y1="45"  x2="480" y2="45"  stroke="#ccc" stroke-width="1"/>
+  <line x1="80" y1="88"  x2="480" y2="88"  stroke="#ccc" stroke-width="1"/>
+  <line x1="80" y1="131" x2="480" y2="131" stroke="#ccc" stroke-width="1"/>
+  <line x1="80" y1="174" x2="480" y2="174" stroke="#ccc" stroke-width="1"/>
+
+  <!-- Engineered concept bubble — overlaps ~3.5 cols × 2.5 rows, offset from grid -->
+  <!-- Centred around ~x=235, y=105, spanning roughly x=155–330, y=58–158 -->
+  <ellipse cx="240" cy="108" rx="92" ry="58"
+    fill="rgba(184,204,224,0.18)" stroke="#9ab4c8" stroke-width="1.5" stroke-dasharray="6,3"/>
+
+  <!-- Label inside bubble -->
+  <text font-size="10.5" fill="#7a9ab5" x="240" y="104" text-anchor="middle" font-style="italic">engineered</text>
+  <text font-size="10.5" fill="#7a9ab5" x="240" y="118" text-anchor="middle" font-style="italic">concept</text>
+
+  <!-- Map label -->
+  <text font-size="13" fill="#888" font-weight="500" x="280" y="205" text-anchor="middle">Map</text>
+
 </svg>
 </body></html>

@@ -6,216 +6,137 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&amp;family=DM+Sans:ital,wght@0,400;0,600;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-    
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #faf9f7;
-      --text: #1a1a1a;
-      --text-muted: #999;
-      --text-disabled: #ccc;
-      --link: #1a4a8a;
-      --link-hover: #0d2e5c;
-      --underline: rgba(26, 74, 138, 0.35);
-      --preview-bg: #fffff8;
-      --preview-border: #ddd;
-      --preview-shadow: rgba(0,0,0,0.11);
+      --bg: #faf9f7; --text: #1a1a1a; --text-muted: #999; --text-disabled: #ccc;
+      --link: #1a4a8a; --link-hover: #0d2e5c; --underline: rgba(26, 74, 138, 0.35);
+      --preview-bg: #fffff8; --preview-border: #ddd; --preview-shadow: rgba(0,0,0,0.11);
     }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-    }
-
-    nav {
-      width: 136px;
-      min-height: 100vh;
-      padding: 2.8rem 0 2.8rem 1.8rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.05rem;
-      flex-shrink: 0;
-    }
-
-    .nav-item {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.53rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 0.25rem 0;
-      text-decoration: none;
-      color: var(--text-disabled);
-      pointer-events: none;
-    }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
+    nav { width: 136px; min-height: 100vh; padding: 2.8rem 0 2.8rem 1.8rem; display: flex; flex-direction: column; gap: 0.05rem; flex-shrink: 0; }
+    .nav-item { font-family: 'JetBrains Mono', monospace; font-size: 0.53rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.25rem 0; text-decoration: none; color: var(--text-disabled); pointer-events: none; }
     .nav-item.active { color: var(--text); pointer-events: auto; }
-
-    .tlink {
-      color: var(--link);
-      text-decoration: underline;
-      text-decoration-color: var(--underline);
-      text-underline-offset: 3px;
-      cursor: pointer;
-    }
+    .tlink { color: var(--link); text-decoration: underline; text-decoration-color: var(--underline); text-underline-offset: 3px; cursor: pointer; }
     .tlink:hover { color: var(--link-hover); text-decoration-color: var(--link-hover); }
-
-    /* Preview pane */
-    .preview {
-      position: fixed; z-index: 1000;
-      background: var(--preview-bg);
-      border: 1px solid var(--preview-border);
-      box-shadow: 0 6px 28px var(--preview-shadow);
-      border-radius: 2px;
-      width: 360px; max-height: 420px;
-      display: flex; flex-direction: column;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.15s ease;
-    }
+    .preview { position: fixed; z-index: 1000; background: var(--preview-bg); border: 1px solid var(--preview-border); box-shadow: 0 6px 28px var(--preview-shadow); border-radius: 2px; width: 360px; max-height: 420px; display: flex; flex-direction: column; opacity: 0; pointer-events: none; transition: opacity 0.15s ease; }
     .preview.visible { opacity: 1; pointer-events: auto; }
-
-    .preview-header {
-      padding: 0.8rem 1.1rem 0.65rem;
-      border-bottom: 1px solid var(--preview-border);
-      flex-shrink: 0;
-    }
-    .preview-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.5rem; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--text-muted);
-      margin-bottom: 0.25rem;
-    }
-    .preview-title {
-      font-family: 'EB Garamond', Georgia, serif;
-      font-size: 1rem; font-weight: 500; color: #111; line-height: 1.35;
-    }
-    .preview-body {
-      flex: 1; overflow-y: auto;
-      padding: 0.9rem 1.1rem;
-      font-family: 'EB Garamond', Georgia, serif;
-      font-size: 0.9rem; line-height: 1.65; color: #333;
-      mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
-    }
+    .preview-header { padding: 0.8rem 1.1rem 0.65rem; border-bottom: 1px solid var(--preview-border); flex-shrink: 0; }
+    .preview-label { font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.25rem; }
+    .preview-title { font-family: 'EB Garamond', Georgia, serif; font-size: 1rem; font-weight: 500; color: #111; line-height: 1.35; }
+    .preview-body { flex: 1; overflow-y: auto; padding: 0.9rem 1.1rem; font-family: 'EB Garamond', Georgia, serif; font-size: 0.9rem; line-height: 1.65; color: #333; mask-image: linear-gradient(to bottom, black 55%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%); }
     .preview-body:hover { mask-image: none; -webkit-mask-image: none; }
     .preview-body p { margin-bottom: 0.8em; }
     .preview-body p:last-child { margin-bottom: 0; }
-    .preview-footer {
-      padding: 0.6rem 1.1rem;
-      border-top: 1px solid var(--preview-border);
-      flex-shrink: 0;
-    }
-    .preview-link {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.5rem; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--link);
-      text-decoration: none; border-bottom: 1px solid var(--underline);
-      padding-bottom: 1px;
-    }
+    .preview-footer { padding: 0.6rem 1.1rem; border-top: 1px solid var(--preview-border); flex-shrink: 0; }
+    .preview-link { font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--link); text-decoration: none; border-bottom: 1px solid var(--underline); padding-bottom: 1px; }
     .preview-link:hover { color: var(--link-hover); }
-
     html { font-size: 16px; }
     body { font-family: 'DM Sans', sans-serif; }
-    main {
-      flex: 1; display: flex;
-      justify-content: center;
-      padding: 3.5rem 2rem 6rem 2rem;
-    }
+    main { flex: 1; display: flex; justify-content: center; padding: 3.5rem 2rem 6rem 2rem; }
     .content { width: 100%; max-width: 660px; }
-    h1 {
-      font-size: 1.6rem; font-weight: 600;
-      line-height: 1.3; margin-bottom: 1.4rem; color: #111;
-    }
-    p {
-      font-size: 1rem; line-height: 1.78;
-      margin-bottom: 1em; color: #2a2a2a;
-    }
+    h1 { font-size: 1.6rem; font-weight: 600; line-height: 1.3; margin-bottom: 1.4rem; color: #111; }
+    p { font-size: 1rem; line-height: 1.78; margin-bottom: 1em; color: #2a2a2a; }
     p:last-child { margin-bottom: 0; }
-    ul {
-      font-size: 1rem; line-height: 1.78;
-      margin-bottom: 1em; padding-left: 1.4em; color: #2a2a2a;
-    }
+    ul { font-size: 1rem; line-height: 1.78; margin-bottom: 1em; padding-left: 1.4em; color: #2a2a2a; }
     ul li { margin-bottom: 0.25em; }
-    .definition {
-      border-left: 2px solid #ddd;
-      padding-left: 1rem; margin: 1.2em 0;
-      color: #555; font-style: italic;
+    .definition { border-left: 2px solid #ddd; padding-left: 1rem; margin: 1.2em 0; color: #555; font-style: italic; }
+
+    /* Expandable block */
+    .expandable { margin: 1.2em 0; }
+    .expandable-toggle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--link); cursor: pointer;
+      border-bottom: 1px solid var(--underline); padding-bottom: 1px;
+      display: inline-block;
     }
+    .expandable-toggle:hover { color: var(--link-hover); }
+    .expandable-toggle::before { content: '+ '; }
+    .expandable-toggle.open::before { content: '− '; }
+    .expandable-body { display: none; margin-top: 0.8em; }
+    .expandable-body.open { display: block; }
 
     @media (max-width: 768px) {
       body { flex-direction: column; }
-      nav {
-        width: 100%; min-height: auto; height: auto;
-        flex-direction: row; align-items: center;
-        padding: 0.8rem 1.2rem;
-        border-bottom: 1px solid #e8e4de;
-        gap: 1.2rem; position: sticky; top: 0;
-        background: #faf9f7; z-index: 100;
-      }
+      nav { width: 100%; min-height: auto; height: auto; flex-direction: row; align-items: center; padding: 0.8rem 1.2rem; border-bottom: 1px solid #e8e4de; gap: 1.2rem; position: sticky; top: 0; background: #faf9f7; z-index: 100; }
       .nav-item { padding: 0; font-size: 0.5rem; }
-      main {
-        padding: 2rem 1.2rem 4rem 1.2rem !important;
-        justify-content: flex-start !important;
-      }
+      main { padding: 2rem 1.2rem 4rem 1.2rem !important; justify-content: flex-start !important; }
       .content { max-width: 100% !important; }
       h1 { font-size: 1.3rem !important; }
       p { font-size: 0.95rem !important; }
-      .thesis-lead { font-size: 1.1rem !important; }
-      .thesis-body { font-size: 1rem !important; }
-      .preview, .tooltip {
-        width: calc(100vw - 24px) !important;
-        max-width: calc(100vw - 24px) !important;
-        left: 12px !important;
-        right: 12px !important;
-        bottom: 12px !important;
-        top: auto !important;
-        max-height: 50vh !important;
-        position: fixed !important;
-      }
+      .preview, .tooltip { width: calc(100vw - 24px) !important; max-width: calc(100vw - 24px) !important; left: 12px !important; right: 12px !important; bottom: 12px !important; top: auto !important; max-height: 50vh !important; position: fixed !important; }
     }
   </style>
 </head>
 <body>
-  
   <nav>
     <a class="nav-item active" href="/">Problem</a>
     <a class="nav-item" href="#">Solution</a>
-
   </nav>
 
   <main>
     <div class="content">
-      
-  <h1 style="">You do not always need to change what people are looking at.</h1>
-  <p style="">"He is firm." "He is obstinate." "He is pig-headed."</p>
-  <p style="">These three sentences do not point to three different traits. They point to the same trait, but with increasingly negative evaluative coloring.</p>
-  <p style="">Words don't just point: they frame. They carry emotional valence, implied judgments, social cues. Two words can refer to the same thing while pulling very different feelings — and inferences — about it from us.</p>
-  <p style="">Which is why engineered words are powerful. You do not always need to change what people are looking at to change their reaction to it. Sometimes it's enough to change the word through which they're looking.</p>
-  <p style="">Engineered words often work not by changing <span class="tlink" data-key="denotation-connotation" style="">denotation, but by changing connotation</span>. <br><br>Two terms can share the same referent while having very different emotional and evaluative fields around them, leading people to think and act differently about the same thing.</p>
-  <p style=""><span class="tlink" data-key="examples-words" style="">See also.</span></p>
-      
-      <iframe src="img-connotation-map.html" style="width:100%;height:220px;border:none;margin:1.5rem 0;display:block;" scrolling="no"></iframe>
+      <h1>You do not always need to change what people are looking at.</h1>
+      <p>"He is firm." "He is obstinate." "He is pig-headed."</p>
+      <p>These three sentences do not point to three different traits. They point to the same trait, but with increasingly negative evaluative coloring.</p>
+      <p>Words don't just point: they frame. They carry emotional valence, implied judgments, social cues. Two words can refer to the same thing while pulling very different feelings — and inferences — about it from us.</p>
+      <p>Which is why engineered words are powerful. You do not always need to change what people are looking at to change their reaction to it. Sometimes it's enough to change the word through which they're looking.</p>
+      <p>Engineered words often work not by changing <span class="tlink" data-key="denotation-connotation">denotation, but by changing connotation</span>. Two terms can share the same referent while having very different emotional and evaluative fields around them, leading people to think and act differently about the same thing.</p>
+
+      <div class="expandable">
+        <span class="expandable-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">Same thing, different words</span>
+        <div class="expandable-body">
+          <p style="color:#999;margin-bottom:0.6em;">Each pair shares a referent. The connotation is what shifts:</p>
+          <ul>
+            <li>homeless / unhoused</li>
+            <li>illegal alien / undocumented immigrant</li>
+            <li>fetus / unborn child</li>
+            <li>propaganda / public relations</li>
+            <li>civilian deaths / collateral damage</li>
+            <li>torture / enhanced interrogation</li>
+            <li>riot / mostly peaceful protest</li>
+            <li>mob / crowd</li>
+            <li>regime / government</li>
+            <li>terrorist / freedom fighter</li>
+            <li>invasion / intervention</li>
+            <li>censorship / content moderation</li>
+            <li>fired / let go</li>
+            <li>lying / strategic communication</li>
+            <li>tax / contribution</li>
+            <li>bureaucracy / public service</li>
+            <li>activist / agitator</li>
+            <li>nationalism / patriotism</li>
+            <li>stubborn / principled</li>
+            <li>arrogant / confident</li>
+            <li>emotional / passionate</li>
+            <li>manipulative / persuasive</li>
+            <li>propaganda / education</li>
+            <li>layoffs / workforce optimization</li>
+            <li>abortion / reproductive care</li>
+          </ul>
+          <span class="expandable-toggle open" style="margin-top:0.8em;" onclick="var e=this.closest('.expandable');e.querySelector('.expandable-toggle').classList.remove('open');e.querySelector('.expandable-body').classList.remove('open');">Collapse</span>
+        </div>
+      </div>
+
+      <iframe src="img-connotation-map.html" style="width:100%;height:220px;border:none;margin:1.5rem 0 0.5rem 0;display:block;" scrolling="no"></iframe>
+      <p style="font-size:0.8rem;color:#aaa;margin-top:0;font-family:'JetBrains Mono',monospace;letter-spacing:0.05em;text-transform:uppercase;">Recolouring the map</p>
     </div>
   </main>
-  
-  <div class="preview" id="preview" style="">
+
+  <div class="preview" id="preview">
     <div class="preview-header">
       <div class="preview-label" id="preview-label">denotation-connotation</div>
       <div class="preview-title" id="preview-title">Words do two things at once: they point and they suggest.</div>
     </div>
-    <div class="preview-body" id="preview-body"><p>A word's denotation is what it directly refers to. In the case of "tiger," its denotation is that large orange-and-black striped cat out there in the world.</p><p>But words also have connotations: the feelings, associations, judgments, and implied meanings that gather around them. In the case of "tiger," these might include danger, fear, wildness, predation — the fact that this is the thing that ate your cousin.</p><p>A word does not merely pick out a pattern. It also carries a halo of associations around that pattern. Over time, words tend to accumulate more and more of these associations. They may strictly refer to one thing, but they come to suggest much more than that thing alone.</p><p>This creates an opportunity for language engineering. One way to engineer language is by crafting a new word that refers to the same thing — i.e. that has the same&nbsp;denotation — while avoiding or moving away from the old connotation.. The thing being referred to may remain much the same, but the emotional and evaluative field around it changes. Like magic.</p><p>For example, you can refer to the same set of people as "a clique" and as "a mob". Same denotation, very different connotations.</p></div>
+    <div class="preview-body" id="preview-body"><p>A word's denotation is what it directly refers to. In the case of "tiger," its denotation is that large orange-and-black striped cat out there in the world.</p><p>But words also have connotations: the feelings, associations, judgments, and implied meanings that gather around them. In the case of "tiger," these might include danger, fear, wildness, predation — the fact that this is the thing that ate your cousin.</p><p>A word does not merely pick out a pattern. It also carries a halo of associations around that pattern. Over time, words tend to accumulate more and more of these associations. They may strictly refer to one thing, but they come to suggest much more than that thing alone.</p><p>This creates an opportunity for language engineering. One way to engineer language is by crafting a new word that refers to the same thing — i.e. that has the same denotation — while avoiding or moving away from the old connotation. The thing being referred to may remain much the same, but the emotional and evaluative field around it changes. Like magic.</p><p>For example, you can refer to the same set of people as "a clique" and as "a mob". Same denotation, very different connotations.</p></div>
     <div class="preview-footer">
       <a class="preview-link" href="denotation-connotation.html" id="preview-link">Read full page →</a>
     </div>
   </div>
 
-  
   <script src="tooltip_engine.js"></script>
-
-  
-
 
 </body></html>
