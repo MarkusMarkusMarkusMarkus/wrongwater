@@ -72,10 +72,9 @@
     }, 220);
   }
 
-  document.querySelectorAll('.tlink').forEach(el => {
+  function bindTlink(el) {
     el.addEventListener('mouseenter', () => show(el, el.dataset.key));
     el.addEventListener('mouseleave', hide);
-
     el.addEventListener('click', e => {
       if (window.innerWidth > 768) {
         e.preventDefault();
@@ -87,7 +86,6 @@
         }
       }
     });
-
     el.addEventListener('touchend', e => {
       e.preventDefault();
       if (activeTouch === el.dataset.key && preview.classList.contains('visible')) {
@@ -97,7 +95,9 @@
         show(el, el.dataset.key);
       }
     });
-  });
+  }
+
+  document.querySelectorAll('.tlink').forEach(bindTlink);
 
   document.addEventListener('touchend', e => {
     if (!preview.contains(e.target) && !e.target.classList.contains('tlink')) {
@@ -109,51 +109,180 @@
   preview.addEventListener('mouseleave', hide);
 
   // ── Edit mode ──────────────────────────────────────────────────────────────
-  // Activated by ?edit=true in the URL. Handles Copy HTML cleanly by removing
-  // itself from the DOM before serialising, so it never appears in the output.
 
   if (new URLSearchParams(window.location.search).get('edit') !== 'true') return;
 
+  const PAGES = [
+    { key: 'public-language',           label: 'Public Language' },
+    { key: 'engineered-language',       label: 'Engineered Language' },
+    { key: 'engineered-names',          label: 'Engineered Names' },
+    { key: 'engineered-words',          label: 'Engineered Words' },
+    { key: 'engineered-concepts',       label: 'Engineered Concepts' },
+    { key: 'shared-maps',               label: 'Shared Maps' },
+    { key: 'social-reality',            label: 'Social Reality' },
+    { key: 'legitimacy',                label: 'Legitimacy' },
+    { key: 'interlocking-expectations', label: 'Interlocking Expectations' },
+    { key: 'political-struggle',        label: 'Political Struggle' },
+    { key: 'map-territory',             label: 'Map & Territory' },
+    { key: 'map-is-territory',          label: 'Map is Territory' },
+    { key: 'material-social',           label: 'Material vs Social' },
+    { key: 'concepts',                  label: 'Concepts' },
+    { key: 'denotation-connotation',    label: 'Denotation & Connotation' },
+    { key: 'examples-words',            label: 'Examples: Words' },
+    { key: 'many-others',               label: 'Many Others' },
+  ];
+
+  const monoFont = '"JetBrains Mono",monospace';
+
+  // ── Link dropdown ──────────────────────────────────────────────────────────
+  const dropdown = document.createElement('div');
+  dropdown.id = '__link-dropdown__';
+  dropdown.style.cssText = [
+    'position:fixed;z-index:10000;',
+    'background:#fffff8;border:1px solid #ddd;',
+    'box-shadow:0 4px 16px rgba(0,0,0,0.12);',
+    'border-radius:2px;padding:0.4rem 0;',
+    'display:none;min-width:220px;',
+  ].join('');
+
+  PAGES.forEach(function(p) {
+    const item = document.createElement('div');
+    item.textContent = p.label;
+    item.dataset.key = p.key;
+    item.style.cssText = [
+      'font-family:' + monoFont + ';',
+      'font-size:0.5rem;letter-spacing:0.06em;',
+      'text-transform:uppercase;padding:0.45rem 0.9rem;',
+      'cursor:pointer;color:#333;',
+    ].join('');
+    item.addEventListener('mouseenter', function() { item.style.background = '#f0f0e8'; });
+    item.addEventListener('mouseleave', function() { item.style.background = ''; });
+    item.addEventListener('mousedown', function(e) {
+      e.preventDefault(); // keep the text selection alive
+      applyLink(p.key);
+      dropdown.style.display = 'none';
+    });
+    dropdown.appendChild(item);
+  });
+
+  document.body.appendChild(dropdown);
+
+  // Close dropdown on outside click
+  document.addEventListener('click', function(e) {
+    if (!dropdown.contains(e.target) && e.target !== linkBtn) {
+      dropdown.style.display = 'none';
+    }
+  });
+
+  let savedRange = null;
+
+  function applyLink(key) {
+    if (!savedRange) return;
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(savedRange);
+
+    const selectedText = savedRange.toString().trim();
+    if (!selectedText) return;
+
+    // If the selected text is already inside a tlink, just update the key
+    const ancestor = savedRange.commonAncestorContainer;
+    const parentEl = ancestor.nodeType === 3 ? ancestor.parentElement : ancestor;
+    if (parentEl && parentEl.classList && parentEl.classList.contains('tlink')) {
+      parentEl.dataset.key = key;
+      bindTlink(parentEl);
+      savedRange = null;
+      return;
+    }
+
+    // Wrap selection in a new tlink span
+    const span = document.createElement('span');
+    span.className = 'tlink';
+    span.dataset.key = key;
+    try {
+      savedRange.surroundContents(span);
+    } catch(e) {
+      span.appendChild(savedRange.extractContents());
+      savedRange.insertNode(span);
+    }
+    bindTlink(span);
+    savedRange = null;
+  }
+
+  // ── Edit bar ───────────────────────────────────────────────────────────────
   const bar = document.createElement('div');
   bar.id = '__edit-bar__';
-  bar.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;gap:0.6rem;align-items:center;';
+  bar.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;gap:0.5rem;align-items:center;';
 
-  const label = document.createElement('span');
-  label.textContent = 'Edit mode';
-  label.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.45rem;letter-spacing:0.1em;text-transform:uppercase;color:#999;';
+  const editLabel = document.createElement('span');
+  editLabel.textContent = 'Edit mode';
+  editLabel.style.cssText = 'font-family:' + monoFont + ';font-size:0.45rem;letter-spacing:0.1em;text-transform:uppercase;color:#999;margin-right:0.2rem;';
 
-  const btn = document.createElement('button');
-  btn.textContent = 'Copy HTML';
-  btn.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.45rem;letter-spacing:0.08em;text-transform:uppercase;background:#1a4a8a;color:#fff;border:none;padding:0.4rem 0.8rem;cursor:pointer;border-radius:2px;';
+  const btnBase = 'font-family:' + monoFont + ';font-size:0.45rem;letter-spacing:0.08em;text-transform:uppercase;border:none;padding:0.4rem 0.8rem;cursor:pointer;border-radius:2px;';
 
-  btn.onclick = function() {
-    // Strip contenteditable and edit styling before copying
+  // Link button
+  const linkBtn = document.createElement('button');
+  linkBtn.textContent = '+ Link';
+  linkBtn.style.cssText = btnBase + 'background:#e8ede8;color:#3a5a3a;';
+  linkBtn.title = 'Select some text on the page, then click here to link it';
+
+  linkBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed) {
+      linkBtn.textContent = 'Select text first';
+      setTimeout(function() { linkBtn.textContent = '+ Link'; }, 1800);
+      return;
+    }
+    savedRange = sel.getRangeAt(0).cloneRange();
+
+    // Position dropdown just above the bar
+    const barRect = bar.getBoundingClientRect();
+    dropdown.style.display = 'block';
+    dropdown.style.bottom = (window.innerHeight - barRect.top + 8) + 'px';
+    dropdown.style.right = (window.innerWidth - barRect.right) + 'px';
+    dropdown.style.top = 'auto';
+    dropdown.style.left = 'auto';
+  });
+
+  // Copy HTML button
+  const copyBtn = document.createElement('button');
+  copyBtn.textContent = 'Copy HTML';
+  copyBtn.style.cssText = btnBase + 'background:#1a4a8a;color:#fff;';
+
+  copyBtn.onclick = function() {
+    // Strip editing artefacts
     document.querySelectorAll('.content h1, .content p').forEach(function(el) {
       el.removeAttribute('contenteditable');
       el.style.borderBottom = '';
       el.style.outline = '';
     });
-    // Remove bar from DOM so it doesn't appear in copied HTML
+    // Remove stale inline styles on tlinks and preview position
+    document.querySelectorAll('.tlink').forEach(function(el) { el.style.cssText = ''; });
+    const pv = document.getElementById('preview');
+    if (pv) { pv.style.top = ''; pv.style.left = ''; }
+
+    // Remove edit UI from DOM before serialising
     bar.remove();
-    // Also remove any stale hardcoded edit bars from previous copies
-    document.querySelectorAll('[id="__edit-bar__"], style[data-edit]').forEach(n => n.remove());
+    dropdown.remove();
 
     const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
 
     navigator.clipboard.writeText(html).then(function() {
-      // Restore bar and editing
       document.body.appendChild(bar);
-      btn.textContent = 'Copied!';
-      setTimeout(function() { btn.textContent = 'Copy HTML'; }, 2000);
+      document.body.appendChild(dropdown);
+      copyBtn.textContent = 'Copied!';
+      setTimeout(function() { copyBtn.textContent = 'Copy HTML'; }, 2000);
       applyEditable();
     }).catch(function() {
       document.body.appendChild(bar);
-      applyEditable();
+      document.body.appendChild(dropdown);
     });
   };
 
-  bar.appendChild(label);
-  bar.appendChild(btn);
+  bar.appendChild(editLabel);
+  bar.appendChild(linkBtn);
+  bar.appendChild(copyBtn);
   document.body.appendChild(bar);
 
   function applyEditable() {
