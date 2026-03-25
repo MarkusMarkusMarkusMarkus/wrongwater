@@ -107,4 +107,64 @@
 
   preview.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
   preview.addEventListener('mouseleave', hide);
+
+  // ── Edit mode ──────────────────────────────────────────────────────────────
+  // Activated by ?edit=true in the URL. Handles Copy HTML cleanly by removing
+  // itself from the DOM before serialising, so it never appears in the output.
+
+  if (new URLSearchParams(window.location.search).get('edit') !== 'true') return;
+
+  const bar = document.createElement('div');
+  bar.id = '__edit-bar__';
+  bar.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;gap:0.6rem;align-items:center;';
+
+  const label = document.createElement('span');
+  label.textContent = 'Edit mode';
+  label.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.45rem;letter-spacing:0.1em;text-transform:uppercase;color:#999;';
+
+  const btn = document.createElement('button');
+  btn.textContent = 'Copy HTML';
+  btn.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.45rem;letter-spacing:0.08em;text-transform:uppercase;background:#1a4a8a;color:#fff;border:none;padding:0.4rem 0.8rem;cursor:pointer;border-radius:2px;';
+
+  btn.onclick = function() {
+    // Strip contenteditable and edit styling before copying
+    document.querySelectorAll('.content h1, .content p').forEach(function(el) {
+      el.removeAttribute('contenteditable');
+      el.style.borderBottom = '';
+      el.style.outline = '';
+    });
+    // Remove bar from DOM so it doesn't appear in copied HTML
+    bar.remove();
+    // Also remove any stale hardcoded edit bars from previous copies
+    document.querySelectorAll('[id="__edit-bar__"], style[data-edit]').forEach(n => n.remove());
+
+    const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+    navigator.clipboard.writeText(html).then(function() {
+      // Restore bar and editing
+      document.body.appendChild(bar);
+      btn.textContent = 'Copied!';
+      setTimeout(function() { btn.textContent = 'Copy HTML'; }, 2000);
+      applyEditable();
+    }).catch(function() {
+      document.body.appendChild(bar);
+      applyEditable();
+    });
+  };
+
+  bar.appendChild(label);
+  bar.appendChild(btn);
+  document.body.appendChild(bar);
+
+  function applyEditable() {
+    document.querySelectorAll('.content h1, .content p').forEach(function(el) {
+      el.contentEditable = 'true';
+      el.style.outline = 'none';
+      el.style.borderBottom = '1px dashed #ccc';
+      el.addEventListener('focus', function() { el.style.borderBottom = '1px dashed #1a4a8a'; });
+      el.addEventListener('blur',  function() { el.style.borderBottom = '1px dashed #ccc'; });
+    });
+  }
+
+  applyEditable();
 })();
