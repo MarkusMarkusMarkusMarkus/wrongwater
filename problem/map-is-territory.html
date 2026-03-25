@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Map is the Territory</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&amp;family=DM+Sans:ital,wght@0,400;0,600;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
     
@@ -181,7 +182,7 @@
 <body>
   
   <nav>
-    <a class="nav-item active" href="/">Problem</a>
+    <a class="nav-item active" href="../index.html">Problem</a>
     <a class="nav-item" href="#">Solution</a>
 
   </nav>
@@ -189,30 +190,70 @@
   <main>
     <div class="content">
       
-  <h1 style="">In social reality, shared maps constitute the territory.</h1>
-  <p style=""><br></p>
-  <p style="">The idea that "<span class="tlink" data-key="map-territory" style="">the map is not the territory</span>" applies especially well to <span class="tlink" data-key="material-social" style="">material reality</span> — which is indifferent to our thoughts about it.&nbsp;</p>
-  <p style="">But <span class="tlink" data-key="social-reality" style="">social reality</span> works differently. Social reality <i>depends</i> on shared maps: on sufficiently aligned beliefs, concepts, expectations, symbols. Money, laws, offices, borders, reputations, and institutions are real, but they are real partly because people collectively treat them as real and <span class="tlink" data-key="interlocking-expectations" style="">expect others to do so as well</span>.</p>
-  <p style="">In material reality: the map is not the territory. In social reality: <span class="tlink" data-key="shared-maps" style="">shared maps</span> constitute the territory.</p>
-      <p style="">That is why struggles over <span class="tlink" data-key="public-language" style="">language</span>, concepts, and public meaning matter so much: in domains where shared maps help build reality, maps do not merely describe the world — they are how the world gets made.</p>
+  <h1>In social reality, shared maps constitute the territory.</h1>
+  <p>There is an old adage that the map is not the territory. It is a useful corrective against a common mistake: confusing what we think is the case with what actually is the case.</p>
+  <p>It applies especially well to <span class="tlink" data-key="material-social">material reality</span> — which is indifferent to our thoughts about it. Mountains do not disappear when we stop believing in them. Gravity does not weaken because we don't know about it.</p>
+  <p>But <span class="tlink" data-key="social-reality">social reality</span> is different. Social reality depends on shared maps: on sufficiently aligned beliefs, concepts, expectations, and symbols. Money, laws, offices, borders, reputations, and institutions are real, but they are real partly because people collectively treat them as real.</p>
+  <p>So in material reality, the map is not the territory. In social reality, shared maps constitute the territory.</p>
+      <p>That is why struggles over <span class="tlink" data-key="public-language">language</span>, concepts, and public meaning matter so much: in domains where shared maps help build reality, maps do not merely describe the world — they are how the world gets made.</p>
       <iframe src="img-iceberg.html" style="width:100%;height:280px;border:none;margin:1.5rem 0;display:block;" scrolling="no"></iframe>
     </div>
   </main>
   
-  <div class="preview" id="preview" style="">
+  <div class="preview" id="preview">
     <div class="preview-header">
-      <div class="preview-label" id="preview-label">public-language</div>
-      <div class="preview-title" id="preview-title">Most of the language you use, you did not invent.</div>
+      <div class="preview-label" id="preview-label"></div>
+      <div class="preview-title" id="preview-title"></div>
     </div>
-    <div class="preview-body" id="preview-body"><p>Most of the language you use, you did not invent.</p><p>"Public language" is the language that is publicly available: language acquired from outside ourselves. That is most of the language we use — how many of the words you've said today did you personally coin?</p><p>And it makes sense that you didn't: if each person had to invent their own words, we'd collapse into a Tower of Babel scenario. Publicly available language allows communication, coordination, and shared thought across many minds.</p><p>But that means it is not optimal for reasoning.</p><p>Because we do not think in wholly self-invented language, but instead in language inherited from, and shared with, many others, the medium we think with can be strategically shaped before it reaches us. And the larger the number of people whose thinking depends on a particular shared linguistic medium, the stronger the incentive to do so.</p></div>
+    <div class="preview-body" id="preview-body"></div>
     <div class="preview-footer">
-      <a class="preview-link" id="preview-link" href="public-language.html">Read full page →</a>
+      <a class="preview-link" id="preview-link" href="#">Read full page &#8594;</a>
     </div>
   </div>
 
   
   <script src="tooltip_engine.js"></script>
 
-  
+  <script>
+  (function() {
+    if (new URLSearchParams(window.location.search).get('edit') !== 'true') return;
 
-</body></html>
+    const bar = document.createElement('div');
+    bar.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;gap:0.6rem;align-items:center;';
+
+    const label = document.createElement('span');
+    label.textContent = 'Edit mode';
+    label.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.45rem;letter-spacing:0.1em;text-transform:uppercase;color:#999;';
+
+    const btn = document.createElement('button');
+    btn.textContent = 'Copy HTML';
+    btn.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.45rem;letter-spacing:0.08em;text-transform:uppercase;background:#1a4a8a;color:#fff;border:none;padding:0.4rem 0.8rem;cursor:pointer;border-radius:2px;';
+    btn.onclick = function() {
+      // Remove edit mode indicators before copying
+      document.querySelectorAll('.content h1, .content p').forEach(function(el) {
+        el.removeAttribute('contenteditable');
+        el.style.borderBottom = '';
+        el.style.outline = '';
+      });
+      const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      navigator.clipboard.writeText(html).then(function() {
+        btn.textContent = 'Copied!';
+        setTimeout(function() { btn.textContent = 'Copy HTML'; }, 2000);
+      });
+    };
+
+    bar.appendChild(label);
+    bar.appendChild(btn);
+    document.body.appendChild(bar);
+
+    document.querySelectorAll('.content h1, .content p').forEach(function(el) {
+      el.contentEditable = 'true';
+      el.style.outline = 'none';
+      el.style.borderBottom = '1px dashed #ccc';
+      el.addEventListener('focus', function() { el.style.borderBottom = '1px dashed #1a4a8a'; });
+      el.addEventListener('blur', function() { el.style.borderBottom = '1px dashed #ccc'; });
+    });
+  })();
+  </script>
+</body>
+</html>
