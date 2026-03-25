@@ -189,14 +189,14 @@
   <main>
     <div class="content">
       
-  <h1 style="">Material reality is that which, when you stop believing in it, does not go away.</h1>
-  <p style="">Philip K. Dick defined reality as "that which, when you stop believing in it, doesn't go away." Mountains, water, air, sunlight — neither of these care about you think about it.</p>
-      <iframe src="img-material-reality.html" style="width:100%;height:320px;border:none;margin:1.5rem 0;display:block;" scrolling="no"></iframe>
-      <iframe src="img-social-reality-half.html" style="width:100%;height:320px;border:none;margin:1.5rem 0;display:block;" scrolling="no"></iframe>
-      <p style="">Social reality isn't like that. It is made from collectively recognized facts — money, laws, the Emperor's power, borders, marriage, job titles, corporations, calendars. Social reality exists only insofar as we believe that it does.</p>
-  <p style="">There are Iron Age tribes living in the Amazon who don't believe in banks and, therefore, don't have banks. You could airlift a bank and drop it in the middle of their village but you wouldn't really expect that, should you come back in a few years, the tribespeople would all be dressed as bank tellers. The belief is missing. Material reality has been replicated. But&nbsp; social reality has not — because their beliefs are all the same as they were before.<br><br>(Except that big black birds now drop builidngs from the sky)</p>
-  <p style="">Importantly, material reality survives universal withdrawal of belief while social reality does not.</p>
-  <p style="">This matters because it means social reality can be constructed — and therefore contested. Whoever shapes the <span class="tlink" data-key="shared-maps">shared maps</span> shapes what counts as real, binding, and worth acting on. <br><br>See also: <span class="tlink" data-key="map-is-territory">the map is the territory</span>.</p>
+  <h1>Material reality is that which, when you stop believing in it, does not go away.</h1>
+  <p>Philip K. Dick defined reality as "that which, when you stop believing in it, doesn't go away." Mountains, water, air, sunlight — neither of these care about you think about it.</p>
+
+      <iframe src="img-material-social.html" style="width:100%;height:320px;border:none;margin:1.5rem 0;display:block;" scrolling="no"></iframe>
+      <p>Social reality isn't like that. It is made from collectively recognized facts — money, laws, the Emperor's power, borders, marriage, job titles, corporations, calendars. Social reality exists only insofar as we believe that it does.</p>
+  <p>There are Iron Age tribes living in the Amazon who don't believe in banks and, therefore, don't have banks. You could airlift a bank and drop it in the middle of their village but you wouldn't really expect that, should you come back in a few years, the tribespeople would all be dressed as bank tellers. The belief is missing. Material reality has been replicated. But&nbsp; social reality has not — because their beliefs are all the same as they were before.<br><br>(Except that big black birds now drop builidngs from the sky)</p>
+  <p>Importantly, material reality survives universal withdrawal of belief while social reality does not.</p>
+  <p>This matters because it means social reality can be constructed — and therefore contested. Whoever shapes the <span class="tlink" data-key="shared-maps">shared maps</span> shapes what counts as real, binding, and worth acting on. <br><br>See also: <span class="tlink" data-key="map-is-territory">the map is the territory</span>.</p>
       
 
       
@@ -204,7 +204,7 @@
     </div>
   </main>
   
-  <div class="preview" id="preview" style="top: 375.039px; left: 670.492px;">
+  <div class="preview" id="preview">
     <div class="preview-header">
       <div class="preview-label" id="preview-label">map-is-territory</div>
       <div class="preview-title" id="preview-title">In social reality, shared maps constitute the territory.</div>
@@ -218,6 +218,46 @@
   
   <script src="tooltip_engine.js"></script>
 
-  
+  <script>
+  (function() {
+    if (new URLSearchParams(window.location.search).get('edit') !== 'true') return;
+
+    const bar = document.createElement('div');
+    bar.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;gap:0.6rem;align-items:center;';
+
+    const label = document.createElement('span');
+    label.textContent = 'Edit mode';
+    label.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.45rem;letter-spacing:0.1em;text-transform:uppercase;color:#999;';
+
+    const btn = document.createElement('button');
+    btn.textContent = 'Copy HTML';
+    btn.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.45rem;letter-spacing:0.08em;text-transform:uppercase;background:#1a4a8a;color:#fff;border:none;padding:0.4rem 0.8rem;cursor:pointer;border-radius:2px;';
+    btn.onclick = function() {
+      // Remove edit mode indicators before copying
+      document.querySelectorAll('.content h1, .content p').forEach(function(el) {
+        el.removeAttribute('contenteditable');
+        el.style.borderBottom = '';
+        el.style.outline = '';
+      });
+      const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      navigator.clipboard.writeText(html).then(function() {
+        btn.textContent = 'Copied!';
+        setTimeout(function() { btn.textContent = 'Copy HTML'; }, 2000);
+      });
+    };
+
+    bar.appendChild(label);
+    bar.appendChild(btn);
+    document.body.appendChild(bar);
+
+    document.querySelectorAll('.content h1, .content p').forEach(function(el) {
+      el.contentEditable = 'true';
+      el.style.outline = 'none';
+      el.style.borderBottom = '1px dashed #ccc';
+      el.addEventListener('focus', function() { el.style.borderBottom = '1px dashed #1a4a8a'; });
+      el.addEventListener('blur', function() { el.style.borderBottom = '1px dashed #ccc'; });
+    });
+  })();
+  </script><div style="position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; gap: 0.6rem; align-items: center;"><span style="font-family: &quot;JetBrains Mono&quot;, monospace; font-size: 0.45rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(153, 153, 153);">Edit mode</span><button style="font-family: &quot;JetBrains Mono&quot;, monospace; font-size: 0.45rem; letter-spacing: 0.08em; text-transform: uppercase; background: rgb(26, 74, 138); color: rgb(255, 255, 255); border: none; padding: 0.4rem 0.8rem; cursor: pointer; border-radius: 2px;">Copy HTML</button></div>
 
 </body></html>
