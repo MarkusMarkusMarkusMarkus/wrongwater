@@ -4,221 +4,252 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Belief & Existence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0a0a0a; color: #c2c0b6; font-family: 'Georgia', serif; padding: 2rem; }
-    h2 {
-      text-align: center; font-size: 0.7rem; letter-spacing: 0.2em;
-      text-transform: uppercase; color: #666; margin-bottom: 2rem; font-weight: 400;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #faf9f7;
+      font-family: 'EB Garamond', Georgia, serif;
+      padding: 1.5rem 1.5rem 1rem;
     }
-    .charts { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; }
+
+    .charts {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+
     .chart-wrap {
-      flex: 1; min-width: 260px; max-width: 340px;
+      flex: 1;
+      min-width: 0;
     }
+
     .chart-title {
-      font-family: Georgia, serif; font-style: italic;
-      font-size: 1.1rem; color: #e8e4d8; text-align: center; margin-bottom: 0.3rem;
+      font-family: 'EB Garamond', Georgia, serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 0.15rem;
     }
+
     .chart-sub {
-      font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase;
-      color: #444; text-align: center; margin-bottom: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.45rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #bbb;
+      margin-bottom: 0.6rem;
     }
+
     canvas { display: block; width: 100%; }
+
     .controls {
-      margin-top: 0.8rem; display: flex; align-items: center; gap: 0.6rem;
-      font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: #555;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-top: 0.6rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.45rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #aaa;
     }
     input[type=range] {
-      flex: 1; accent-color: #888;
-      height: 2px; background: #333; outline: none; cursor: pointer;
+      flex: 1;
+      accent-color: #999;
+      height: 2px;
+      cursor: pointer;
+      outline: none;
     }
-    .val { min-width: 32px; text-align: right; color: #888; }
+    .val { min-width: 28px; text-align: right; color: #888; }
+
     .status {
-      margin-top: 0.6rem; text-align: center; font-size: 0.65rem;
-      letter-spacing: 0.06em; text-transform: uppercase; min-height: 1.2em;
+      margin-top: 0.45rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.42rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      min-height: 1.2em;
+      color: #aaa;
     }
+
     .caption {
-      text-align: center; font-style: italic; font-size: 0.75rem;
-      color: #555; margin-top: 2rem; line-height: 1.6;
+      font-style: italic;
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-top: 1rem;
+      line-height: 1.6;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <h2>Belief & Existence</h2>
   <div class="charts">
 
     <div class="chart-wrap">
       <div class="chart-title">Material Reality</div>
-      <div class="chart-sub">Non-reflexive</div>
-      <canvas id="c1" width="300" height="180"></canvas>
+      <canvas id="c1" width="260" height="160"></canvas>
       <div class="controls">
         <span>Belief</span>
-        <input type="range" id="s1" min="0" max="100" value="50">
-        <span class="val" id="v1">50%</span>
+        <input type="range" id="s1" min="0" max="100" value="30">
+        <span class="val" id="v1">30%</span>
       </div>
-      <div class="status" id="st1" style="color:#5DCAA5">EXISTS — independent of belief</div>
+      <div class="status" id="st1"></div>
     </div>
 
     <div class="chart-wrap">
       <div class="chart-title">Social Reality</div>
-      <div class="chart-sub">Reflexive</div>
-      <canvas id="c2" width="300" height="180"></canvas>
+      <canvas id="c2" width="260" height="160"></canvas>
       <div class="controls">
         <span>Belief</span>
         <input type="range" id="s2" min="0" max="100" value="70">
         <span class="val" id="v2">70%</span>
       </div>
-      <div class="status" id="st2" style="color:#5DCAA5">EXISTS — belief above threshold</div>
+      <div class="status" id="st2"></div>
     </div>
 
   </div>
-  <p class="caption">A mountain exists whether or not you believe in it.<br>A bank exists only insofar as enough people do.</p>
+
+
 
   <script>
     const THRESHOLD = 50;
+    const CREAM = '#faf9f7';
+    const AXIS  = '#ddd';
+    const GRID  = '#eee';
+    const LABEL = '#bbb';
+    const GREEN = '#1D9E75';
+    const RED   = '#C0392B';
+    const MARKER= '#D4A84B';
 
-    function drawMaterial(canvas, belief) {
+    function baseSetup(canvas) {
+      const dpr = window.devicePixelRatio || 1;
+      const displayW = canvas.clientWidth || canvas.width;
+      const displayH = canvas.clientHeight || canvas.height;
+      canvas.width  = displayW * dpr;
+      canvas.height = displayH * dpr;
       const ctx = canvas.getContext('2d');
-      const W = canvas.width, H = canvas.height;
-      ctx.clearRect(0, 0, W, H);
+      ctx.scale(dpr, dpr);
+      return { ctx, W: displayW, H: displayH };
+    }
 
-      const pad = { t: 20, r: 20, b: 30, l: 40 };
-      const cw = W - pad.l - pad.r;
-      const ch = H - pad.t - pad.b;
+    function drawAxes(ctx, pad, cw, ch) {
+      // axes and x ticks only — y labels drawn per-chart at exact line heights
+
+      // x ticks
+      [0, 50, 100].forEach(v => {
+        const x = pad.l + (v / 100) * cw;
+        ctx.fillStyle = LABEL; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(v + '%', x, pad.t + ch + 13);
+      });
 
       // axes
-      ctx.strokeStyle = '#333';
-      ctx.lineWidth = 0.5;
+      ctx.strokeStyle = AXIS; ctx.lineWidth = 0.8;
       ctx.beginPath();
       ctx.moveTo(pad.l, pad.t);
       ctx.lineTo(pad.l, pad.t + ch);
       ctx.lineTo(pad.l + cw, pad.t + ch);
       ctx.stroke();
 
-      // axis labels
-      ctx.fillStyle = '#444';
-      ctx.font = '9px sans-serif';
-      ctx.textAlign = 'right';
-      ctx.fillText('YES', pad.l - 4, pad.t + 6);
-      ctx.fillText('NO', pad.l - 4, pad.t + ch);
-      ctx.textAlign = 'center';
-      ctx.fillText('0%', pad.l, pad.t + ch + 14);
-      ctx.fillText('50%', pad.l + cw/2, pad.t + ch + 14);
-      ctx.fillText('100%', pad.l + cw, pad.t + ch + 14);
-      ctx.fillText('% believing →', pad.l + cw/2, pad.t + ch + 26);
+      // x-axis label
+      ctx.fillStyle = '#ccc'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('% believing →', pad.l + cw / 2, pad.t + ch + 25);
+    }
 
-      // flat line — always exists
-      const y = pad.t + ch * 0.15;
-      ctx.strokeStyle = '#5DCAA5';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(pad.l, y);
-      ctx.lineTo(pad.l + cw, y);
-      ctx.stroke();
+    function drawMaterial(canvas, belief) {
+      const { ctx, W, H } = baseSetup(canvas);
+      ctx.fillStyle = CREAM; ctx.fillRect(0, 0, W, H);
 
-      // belief marker
+      const pad = { t: 18, r: 16, b: 32, l: 68 };
+      const cw = W - pad.l - pad.r;
+      const ch = H - pad.t - pad.b;
+
+      drawAxes(ctx, pad, cw, ch);
+
+      const yHigh = pad.t + ch * 0.15;
+      const yLow  = pad.t + ch; // x-axis baseline
+
+      // flat line
+      ctx.strokeStyle = GREEN; ctx.lineWidth = 1.8;
+      ctx.beginPath(); ctx.moveTo(pad.l, yHigh); ctx.lineTo(pad.l + cw, yHigh); ctx.stroke();
+
+      // y-axis labels at exact line heights
+      ctx.font = '9px sans-serif'; ctx.textAlign = 'right';
+      ctx.fillStyle = GREEN;
+      ctx.fillText('exists', pad.l - 5, yHigh + 3.5);
+      ctx.fillStyle = RED;
+      ctx.fillText("doesn't exist", pad.l - 5, yLow + 3.5);
+
+      // marker
       const bx = pad.l + (belief / 100) * cw;
-      ctx.fillStyle = '#EF9F27';
-      ctx.beginPath();
-      ctx.arc(bx, y, 5, 0, Math.PI * 2);
-      ctx.fill();
-
-      // dashed vertical
-      ctx.strokeStyle = '#333';
-      ctx.lineWidth = 0.5;
-      ctx.setLineDash([3, 3]);
-      ctx.beginPath();
-      ctx.moveTo(bx, pad.t);
-      ctx.lineTo(bx, pad.t + ch);
-      ctx.stroke();
+      ctx.strokeStyle = '#ddd'; ctx.lineWidth = 0.8; ctx.setLineDash([3, 3]);
+      ctx.beginPath(); ctx.moveTo(bx, pad.t); ctx.lineTo(bx, pad.t + ch); ctx.stroke();
       ctx.setLineDash([]);
+      ctx.fillStyle = MARKER;
+      ctx.beginPath(); ctx.arc(bx, yHigh, 4, 0, Math.PI * 2); ctx.fill();
     }
 
     function drawSocial(canvas, belief) {
-      const ctx = canvas.getContext('2d');
-      const W = canvas.width, H = canvas.height;
-      ctx.clearRect(0, 0, W, H);
+      const { ctx, W, H } = baseSetup(canvas);
+      ctx.fillStyle = CREAM; ctx.fillRect(0, 0, W, H);
 
-      const pad = { t: 20, r: 20, b: 30, l: 40 };
+      const pad = { t: 18, r: 16, b: 32, l: 68 };
       const cw = W - pad.l - pad.r;
       const ch = H - pad.t - pad.b;
       const exists = belief >= THRESHOLD;
 
-      // axes
-      ctx.strokeStyle = '#333';
-      ctx.lineWidth = 0.5;
-      ctx.beginPath();
-      ctx.moveTo(pad.l, pad.t);
-      ctx.lineTo(pad.l, pad.t + ch);
-      ctx.lineTo(pad.l + cw, pad.t + ch);
-      ctx.stroke();
-
-      // axis labels
-      ctx.fillStyle = '#444';
-      ctx.font = '9px sans-serif';
-      ctx.textAlign = 'right';
-      ctx.fillText('YES', pad.l - 4, pad.t + 6);
-      ctx.fillText('NO', pad.l - 4, pad.t + ch);
-      ctx.textAlign = 'center';
-      ctx.fillText('0%', pad.l, pad.t + ch + 14);
-      ctx.fillText('50%', pad.l + cw/2, pad.t + ch + 14);
-      ctx.fillText('100%', pad.l + cw, pad.t + ch + 14);
-      ctx.fillText('% believing →', pad.l + cw/2, pad.t + ch + 26);
+      drawAxes(ctx, pad, cw, ch);
 
       // threshold line
       const tx = pad.l + (THRESHOLD / 100) * cw;
-      ctx.strokeStyle = '#333';
-      ctx.lineWidth = 0.5;
-      ctx.setLineDash([4, 3]);
-      ctx.beginPath();
-      ctx.moveTo(tx, pad.t);
-      ctx.lineTo(tx, pad.t + ch);
-      ctx.stroke();
+      ctx.strokeStyle = '#e0ddd8'; ctx.lineWidth = 0.8; ctx.setLineDash([4, 3]);
+      ctx.beginPath(); ctx.moveTo(tx, pad.t); ctx.lineTo(tx, pad.t + ch); ctx.stroke();
       ctx.setLineDash([]);
+      ctx.fillStyle = '#ccc'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('threshold', tx, pad.t - 5);
 
       // step function
       const yHigh = pad.t + ch * 0.15;
-      const yLow = pad.t + ch * 0.85;
-      ctx.strokeStyle = '#5DCAA5';
-      ctx.lineWidth = 2;
+      const yLow  = pad.t + ch; // sit on x-axis baseline
+      ctx.strokeStyle = exists ? GREEN : RED;
+      ctx.lineWidth = 1.8;
       ctx.beginPath();
       ctx.moveTo(pad.l, yLow);
       ctx.lineTo(tx, yLow);
-      ctx.lineTo(tx, yHigh);
+      ctx.moveTo(tx, yHigh);
       ctx.lineTo(pad.l + cw, yHigh);
       ctx.stroke();
 
-      // belief marker
-      const bx = pad.l + (belief / 100) * cw;
-      const by = belief >= THRESHOLD ? yHigh : yLow;
-      ctx.fillStyle = '#EF9F27';
-      ctx.beginPath();
-      ctx.arc(bx, by, 5, 0, Math.PI * 2);
-      ctx.fill();
-
-      // dashed vertical
-      ctx.strokeStyle = '#333';
-      ctx.lineWidth = 0.5;
-      ctx.setLineDash([3, 3]);
-      ctx.beginPath();
-      ctx.moveTo(bx, pad.t);
-      ctx.lineTo(bx, pad.t + ch);
-      ctx.stroke();
+      // dashed connector at threshold
+      ctx.strokeStyle = '#ddd'; ctx.lineWidth = 1; ctx.setLineDash([3,3]);
+      ctx.beginPath(); ctx.moveTo(tx, yLow); ctx.lineTo(tx, yHigh); ctx.stroke();
       ctx.setLineDash([]);
 
-      // threshold label
-      ctx.fillStyle = '#444';
-      ctx.font = '8px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('50%', tx, pad.t + ch * 0.5);
+      // y-axis labels at exact line heights
+      ctx.font = '9px sans-serif'; ctx.textAlign = 'right';
+      ctx.fillStyle = GREEN;
+      ctx.fillText('exists', pad.l - 5, yHigh + 3.5);
+      ctx.fillStyle = RED;
+      ctx.fillText("doesn't exist", pad.l - 5, yLow + 3.5);
+
+      // marker
+      const bx = pad.l + (belief / 100) * cw;
+      const by = exists ? yHigh : yLow;
+      ctx.strokeStyle = '#ddd'; ctx.lineWidth = 0.8; ctx.setLineDash([3, 3]);
+      ctx.beginPath(); ctx.moveTo(bx, pad.t); ctx.lineTo(bx, pad.t + ch); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = MARKER;
+      ctx.beginPath(); ctx.arc(bx, by, 4, 0, Math.PI * 2); ctx.fill();
     }
 
     function update1() {
       const v = +document.getElementById('s1').value;
       document.getElementById('v1').textContent = v + '%';
       drawMaterial(document.getElementById('c1'), v);
-      document.getElementById('st1').textContent = 'EXISTS — independent of belief';
-      document.getElementById('st1').style.color = '#5DCAA5';
+      document.getElementById('st1').textContent = 'Exists — independent of belief';
+      document.getElementById('st1').style.color = '#1D9E75';
     }
 
     function update2() {
@@ -227,13 +258,17 @@
       drawSocial(document.getElementById('c2'), v);
       const exists = v >= THRESHOLD;
       document.getElementById('st2').textContent = exists
-        ? 'EXISTS — belief above threshold'
-        : 'COLLAPSES — belief below 50%';
-      document.getElementById('st2').style.color = exists ? '#5DCAA5' : '#E24B4A';
+        ? 'Exists — belief above threshold'
+        : 'Collapses — belief below 50%';
+      document.getElementById('st2').style.color = exists ? '#1D9E75' : '#C0392B';
     }
 
     document.getElementById('s1').addEventListener('input', update1);
     document.getElementById('s2').addEventListener('input', update2);
+
+    // redraw on resize for DPR correctness
+    window.addEventListener('resize', () => { update1(); update2(); });
+
     update1(); update2();
   </script>
 </body>
