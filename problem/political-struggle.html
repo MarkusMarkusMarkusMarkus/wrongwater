@@ -177,14 +177,57 @@
         position: fixed !important;
       }
     }
+    .top-nav {
+      position: fixed;
+      top: 1.4rem;
+      right: 2rem;
+      display: flex;
+      gap: 1.6rem;
+      z-index: 150;
+    }
+    .top-nav-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--text-muted);
+    }
+    .top-nav-item:hover { color: var(--link); }
+    .mobile-nav-extra { display: none; }
+    @media (max-width: 768px) {
+      .top-nav { display: none; }
+      .mobile-nav-extra {
+        display: flex;
+        margin-left: auto;
+        gap: 1.2rem;
+        align-items: center;
+      }
+      .mobile-nav-extra a {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.5rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--text-muted);
+      }
+    }
   </style>
 </head>
 <body>
+  <div class="top-nav">
+    <a class="top-nav-item" href="../map.html">Map</a>
+    <a class="top-nav-item" href="../about.html">About</a>
+  </div>
+
   
-  <nav>
+    <nav>
     <a class="nav-item active" href="/">Problem</a>
     <a class="nav-item" href="#">Solution</a>
-
+    <span class="mobile-nav-extra">
+      <a href="../map.html">Map</a>
+      <a href="../about.html">About</a>
+    </span>
   </nav>
 
   <main>
