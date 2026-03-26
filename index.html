@@ -323,9 +323,9 @@
       widget.id = 'ww-progress';
       widget.style.cssText = 'display:inline-flex;flex-direction:column;align-items:flex-start;gap:4px;line-height:1;';
       widget.innerHTML =
-        '<span style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:0.06em;color:#999;white-space:nowrap;">' + count + ' / ' + TOTAL + '</span>' +
-        '<span style="display:block;width:36px;height:2px;background:rgba(0,0,0,0.12);border-radius:1px;overflow:hidden;">' +
-        '<span style="display:block;height:2px;width:' + pct + '%;background:#1D9E75;border-radius:1px;"></span></span>';
+        "<span style=\"font-family:monospace;font-size:0.5rem;letter-spacing:0.06em;color:#999;white-space:nowrap;\">" + count + "\u202f/\u202f" + TOTAL + "</span>" +
+        "<span style=\"display:block;width:36px;height:2px;background:rgba(0,0,0,0.12);border-radius:1px;overflow:hidden;\">" +
+        "<span style=\"display:block;height:2px;width:" + pct + "%;background:#1D9E75;border-radius:1px;\"></span></span>";
 
       var topNav = document.querySelector('.top-nav');
       if (topNav) topNav.insertBefore(widget, topNav.firstChild);
