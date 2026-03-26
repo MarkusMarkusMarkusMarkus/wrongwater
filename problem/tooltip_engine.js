@@ -51,9 +51,10 @@
     const wrap = document.createElement('span');
     wrap.id = 'ww-progress';
     const pct = Math.round(count / TOTAL * 100);
+    wrap.style.cssText = 'display:inline-flex;align-items:center;';
     wrap.innerHTML =
-      '<span id="ww-progress-label">' + count + '\u202f/\u202f' + TOTAL + '</span>' +
-      '<span id="ww-progress-track"><span id="ww-progress-fill" style="width:' + pct + '%"></span></span>';
+      '<span style="display:block;width:60px;height:4px;background:rgba(0,0,0,0.1);border-radius:2px;overflow:hidden;">' +
+      '<span style="display:block;height:4px;width:' + pct + '%;background:#1D9E75;border-radius:2px;"></span></span>';
     return wrap;
   }
 
@@ -111,7 +112,7 @@
     bar.style.left = barLeft + 'px';
     bar.style.top = barTop + 'px';
     bar.style.width = barWidth + 'px';
-    const track = bar.querySelector('#ww-progress-track, span');
+    const track = bar.querySelector('span');
     if (track) track.style.width = barWidth + 'px';
   }
 
