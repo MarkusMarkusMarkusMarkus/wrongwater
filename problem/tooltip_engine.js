@@ -1,4 +1,95 @@
 (function() {
+
+  // ── Read tracking ────────────────────────────────────────────────────────────
+  const ALL_PAGES = [
+    'public-language','engineered-language','engineered-names','engineered-words',
+    'engineered-concepts','shared-maps','social-reality','legitimacy',
+    'interlocking-expectations','political-struggle','map-territory','map-is-territory',
+    'material-social','concepts','denotation-connotation','examples-words','many-others'
+  ];
+  const TOTAL = ALL_PAGES.length;
+
+  function getRead() {
+    try { return new Set(JSON.parse(localStorage.getItem('ww_read') || '[]')); } catch(e) { return new Set(); }
+  }
+
+  function markCurrentPageRead() {
+    const slug = location.pathname.split('/').pop().replace('.html','');
+    if (!ALL_PAGES.includes(slug)) return;
+    try {
+      const read = getRead();
+      if (!read.has(slug)) {
+        read.add(slug);
+        localStorage.setItem('ww_read', JSON.stringify([...read]));
+      }
+    } catch(e) {}
+  }
+
+  function applyDimming() {
+    const read = getRead();
+    document.querySelectorAll('.tlink').forEach(el => {
+      if (read.has(el.dataset.key)) el.classList.add('tlink--read');
+      else el.classList.remove('tlink--read');
+    });
+  }
+
+  function injectProgressStyles() {
+    if (document.getElementById('__ww-progress-style__')) return;
+    const s = document.createElement('style');
+    s.id = '__ww-progress-style__';
+    s.textContent = [
+      '.tlink--read { color: #999 !important; text-decoration-color: rgba(153,153,153,0.35) !important; transition: color 0.15s, text-decoration-color 0.15s; }',
+      '.tlink--read:hover { color: #444 !important; text-decoration-color: rgba(68,68,68,0.4) !important; }',
+      '#ww-progress { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 3px; line-height: 1; }',
+      '#ww-progress-label { font-family: "JetBrains Mono", monospace; font-size: 0.5rem; letter-spacing: 0.06em; color: #999; white-space: nowrap; }',
+      '#ww-progress-track { width: 100%; min-width: 32px; height: 2px; background: rgba(0,0,0,0.1); border-radius: 1px; overflow: hidden; }',
+      '#ww-progress-fill { height: 100%; background: #1D9E75; border-radius: 1px; transition: width 0.3s ease; }'
+    ].join('');
+    document.head.appendChild(s);
+  }
+
+  function buildProgressWidget(count) {
+    const wrap = document.createElement('span');
+    wrap.id = 'ww-progress';
+    const pct = Math.round(count / TOTAL * 100);
+    wrap.innerHTML =
+      '<span id="ww-progress-label">' + count + '\u202f/\u202f' + TOTAL + '</span>' +
+      '<span id="ww-progress-track"><span id="ww-progress-fill" style="width:' + pct + '%"></span></span>';
+    return wrap;
+  }
+
+  function injectProgress() {
+    if (document.getElementById('ww-progress')) return;
+    const read = getRead();
+    const count = ALL_PAGES.filter(p => read.has(p)).length;
+    if (count === 0) return;
+    const widget = buildProgressWidget(count);
+
+    // Content pages & index: .top-nav (desktop), .mobile-nav-extra (mobile)
+    const topNav = document.querySelector('.top-nav');
+    if (topNav) {
+      topNav.insertBefore(widget, topNav.firstChild);
+    }
+    const mobileExtra = document.querySelector('.mobile-nav-extra');
+    if (mobileExtra) {
+      const mw = buildProgressWidget(count);
+      mw.id = 'ww-progress-mobile';
+      mobileExtra.insertBefore(mw, mobileExtra.firstChild);
+    }
+    // Map page: append to <nav>
+    if (!topNav && !mobileExtra) {
+      const nav = document.querySelector('nav');
+      if (nav) nav.appendChild(widget);
+    }
+  }
+
+  injectProgressStyles();
+  markCurrentPageRead();
+  applyDimming();
+  injectProgress();
+
+  // ── End read tracking ─────────────────────────────────────────────────────────
+
   const cache = {};
   const preview = document.getElementById('preview');
   const previewLabel = document.getElementById('preview-label');
