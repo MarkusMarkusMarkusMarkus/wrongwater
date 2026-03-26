@@ -87,8 +87,11 @@
       text-underline-offset: 3px;
       cursor: pointer;
       white-space: nowrap;
+      transition: color 0.15s, text-decoration-color 0.15s;
     }
     .tlink:hover { color: var(--link-hover); text-decoration-color: var(--link-hover); }
+    .tlink.tlink--read { color: #999; text-decoration-color: rgba(153,153,153,0.35); }
+    .tlink.tlink--read:hover { color: #555; text-decoration-color: rgba(85,85,85,0.4); }
 
     .hidden-map {
       font-size: 1.25rem;
@@ -293,7 +296,41 @@
     preview.addEventListener('mouseleave', hide);
   </script>
 
-  <script src="tooltip_engine.js"></script>
+  <script>
+    // Read tracking — runs after DOM is ready
+    (function() {
+      var ALL_PAGES = [
+        'public-language','engineered-language','engineered-names','engineered-words',
+        'engineered-concepts','shared-maps','social-reality','legitimacy',
+        'interlocking-expectations','political-struggle','map-territory','map-is-territory',
+        'material-social','concepts','denotation-connotation','examples-words','many-others'
+      ];
+      var TOTAL = ALL_PAGES.length;
+      var read;
+      try { read = new Set(JSON.parse(localStorage.getItem('ww_read') || '[]')); } catch(e) { read = new Set(); }
+
+      // Dim visited tlinks
+      document.querySelectorAll('.tlink').forEach(function(el) {
+        if (read.has(el.dataset.key)) el.classList.add('tlink--read');
+      });
+
+      // Progress counter
+      var count = ALL_PAGES.filter(function(p) { return read.has(p); }).length;
+      if (count === 0) return;
+
+      var pct = Math.round(count / TOTAL * 100);
+      var widget = document.createElement('span');
+      widget.id = 'ww-progress';
+      widget.style.cssText = 'display:inline-flex;flex-direction:column;align-items:flex-start;gap:4px;line-height:1;';
+      widget.innerHTML =
+        '<span style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:0.06em;color:#999;white-space:nowrap;">' + count + ' / ' + TOTAL + '</span>' +
+        '<span style="display:block;width:36px;height:2px;background:rgba(0,0,0,0.12);border-radius:1px;overflow:hidden;">' +
+        '<span style="display:block;height:2px;width:' + pct + '%;background:#1D9E75;border-radius:1px;"></span></span>';
+
+      var topNav = document.querySelector('.top-nav');
+      if (topNav) topNav.insertBefore(widget, topNav.firstChild);
+    })();
+  </script>
 
 </body>
 </html>
