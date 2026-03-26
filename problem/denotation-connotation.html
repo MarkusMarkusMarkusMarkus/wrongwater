@@ -43,10 +43,13 @@
     ul { font-size: 1rem; line-height: 1.78; margin-bottom: 1em; padding-left: 1.4em; color: #2a2a2a; }
     ul li { margin-bottom: 0.25em; }
     .definition { border-left: 2px solid #ddd; padding-left: 1rem; margin: 1.2em 0; color: #555; font-style: italic; }
+    .mobile-nav-link { display: none; }
     @media (max-width: 768px) {
       body { flex-direction: column; }
       nav { width: 100%; min-height: auto; height: auto; flex-direction: row; align-items: center; padding: 0.8rem 1.2rem; border-bottom: 1px solid #e8e4de; gap: 1.2rem; position: sticky; top: 0; background: #faf9f7; z-index: 100; }
       .nav-item { padding: 0; font-size: 0.5rem; }
+      .mobile-nav-link { display: block; margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; color: var(--text-muted); padding: 0; }
+      .mobile-nav-link + .mobile-nav-link { margin-left: 1rem; }
       main { padding: 2rem 1.2rem 4rem 1.2rem !important; justify-content: flex-start !important; }
       .content { max-width: 100% !important; }
       h1 { font-size: 1.3rem !important; }
@@ -84,8 +87,8 @@
   <nav>
     <a class="nav-item active" href="/">Problem</a>
     <a class="nav-item" href="#">Solution</a>
-    <a class="nav-item active" href="../map.html" style="margin-left:auto;">Map</a>
-    <a class="nav-item active" href="../about.html">About</a>
+    <a class="mobile-nav-link" href="../map.html">Map</a>
+    <a class="mobile-nav-link" href="../about.html">About</a>
   </nav>
 
     <main>
