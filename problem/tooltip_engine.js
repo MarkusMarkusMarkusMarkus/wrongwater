@@ -90,6 +90,10 @@
 
   // ── End read tracking ─────────────────────────────────────────────────────────
 
+  // If the page already set up its own tooltip logic, skip rebinding
+  if (document.documentElement.dataset.tooltipBound) return;
+  document.documentElement.dataset.tooltipBound = '1';
+
   const cache = {};
   const preview = document.getElementById('preview');
   const previewLabel = document.getElementById('preview-label');
