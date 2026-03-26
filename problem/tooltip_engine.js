@@ -40,10 +40,10 @@
     s.textContent = [
       '.tlink--read { color: #999 !important; text-decoration-color: rgba(153,153,153,0.35) !important; transition: color 0.15s, text-decoration-color 0.15s; }',
       '.tlink--read:hover { color: #444 !important; text-decoration-color: rgba(68,68,68,0.4) !important; }',
-      '#ww-progress { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 3px; line-height: 1; }',
-      '#ww-progress-label { font-family: "JetBrains Mono", monospace; font-size: 0.5rem; letter-spacing: 0.06em; color: #999; white-space: nowrap; }',
-      '#ww-progress-track { width: 100%; min-width: 32px; height: 2px; background: rgba(0,0,0,0.1); border-radius: 1px; overflow: hidden; }',
-      '#ww-progress-fill { height: 100%; background: #1D9E75; border-radius: 1px; transition: width 0.3s ease; }'
+      '#ww-progress { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 4px; line-height: 1; }',
+      '#ww-progress-label { font-family: "JetBrains Mono", monospace; font-size: 0.5rem; letter-spacing: 0.06em; color: #999 !important; white-space: nowrap; }',
+      '#ww-progress-track { display: block; width: 36px; height: 2px; background: rgba(0,0,0,0.12); border-radius: 1px; overflow: hidden; flex-shrink: 0; }',
+      '#ww-progress-fill { display: block; height: 2px; background: #1D9E75 !important; border-radius: 1px; transition: width 0.3s ease; }'
     ].join('');
     document.head.appendChild(s);
   }
