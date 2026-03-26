@@ -10,6 +10,7 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #faf9f7; font-family: 'EB Garamond', Georgia, serif; }
+
     nav {
       position: fixed; top: 0; left: 0; width: 136px; height: 100vh;
       padding: 2.8rem 0 2.8rem 1.8rem;
@@ -22,16 +23,18 @@
       text-decoration: none; color: #ccc; pointer-events: none;
     }
     .nav-item.active { color: #222; pointer-events: auto; }
+
     canvas {
       position: fixed; top: 0; left: 136px;
       width: calc(100vw - 136px); height: 100vh;
-      cursor: grab;
-      display: block;
+      cursor: grab; display: block;
+      touch-action: none;
     }
+
     #tip {
       position: fixed; pointer-events: none; opacity: 0;
       background: #fffff8; border: 1px solid #ddd; border-radius: 2px;
-      padding: 12px 16px; width: 380px; z-index: 20;
+      padding: 12px 16px; width: 300px; z-index: 20;
       transition: opacity 0.15s;
     }
     #tip-label {
@@ -40,6 +43,7 @@
     }
     #tip-title { font-size: 16px; font-weight: 500; color: #111; margin-bottom: 8px; line-height: 1.35; font-family: 'EB Garamond', Georgia, serif; }
     #tip-body { font-size: 15px; color: #444; line-height: 1.65; font-family: 'EB Garamond', Georgia, serif; }
+
     #back {
       position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 20;
       font-family: 'JetBrains Mono', monospace; font-size: 0.48rem;
@@ -51,6 +55,50 @@
       position: fixed; bottom: 1.5rem; left: 152px; z-index: 20;
       font-family: 'JetBrains Mono', monospace; font-size: 0.45rem;
       letter-spacing: 0.06em; color: #ccc;
+    }
+
+    /* Mobile bottom sheet */
+    #mobile-sheet {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
+      background: #fffff8; border-top: 1px solid #ddd;
+      padding: 16px 20px 32px;
+      transform: translateY(100%);
+      transition: transform 0.22s ease;
+    }
+    #mobile-sheet.visible { transform: translateY(0); }
+    #mobile-sheet-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 9px;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #aaa; margin-bottom: 5px;
+    }
+    #mobile-sheet-title { font-size: 18px; font-weight: 500; color: #111; margin-bottom: 8px; line-height: 1.35; }
+    #mobile-sheet-body { font-size: 16px; color: #444; line-height: 1.65; margin-bottom: 14px; }
+    #mobile-sheet-link {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.5rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: #222; text-decoration: none; border-bottom: 1px solid #ccc; padding-bottom: 1px;
+    }
+    #mobile-sheet-close {
+      position: absolute; top: 14px; right: 16px;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.45rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: #bbb; background: none; border: none; cursor: pointer; padding: 4px;
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        width: 100%; height: 40px;
+        flex-direction: row; gap: 1.2rem;
+        padding: 0 1.2rem;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+        position: fixed; top: 0; left: 0;
+      }
+      canvas { left: 0; width: 100vw; top: 40px; height: calc(100vh - 40px); }
+      #instructions { left: 1rem; bottom: 1rem; }
+      #back { display: none; }
+      #tip { display: none; }
+      #mobile-sheet { display: block; }
     }
   </style>
 </head>
@@ -64,6 +112,13 @@
     <div id="tip-label"></div>
     <div id="tip-title"></div>
     <div id="tip-body"></div>
+  </div>
+  <div id="mobile-sheet">
+    <button id="mobile-sheet-close">close</button>
+    <div id="mobile-sheet-label"></div>
+    <div id="mobile-sheet-title"></div>
+    <div id="mobile-sheet-body"></div>
+    <a id="mobile-sheet-link" href="#">visit →</a>
   </div>
   <div id="instructions">drag · scroll to zoom · click to visit</div>
   <a id="back" href="/">back</a>
@@ -124,21 +179,33 @@
     'map-is-territory':{label:'The Map is the Territory',title:'In social reality, shared maps constitute the territory.',body:'Maps do not merely describe the world — they are how the world gets made.'},
   };
 
+  const isMobile = () => window.innerWidth <= 600;
+  const NAV_OFFSET = () => isMobile() ? 0 : 136;
+  const TOP_OFFSET = () => isMobile() ? 40 : 0;
+
   const canvas = document.getElementById('c');
   const tip = document.getElementById('tip');
+  const sheet = document.getElementById('mobile-sheet');
   const dpr = window.devicePixelRatio || 1;
-  let W = window.innerWidth - 136;
-  let H = window.innerHeight;
-  let ctx;
-  let pan = {x: W/2, y: H/2};
+  let W, H, ctx;
+  let pan = {x: 0, y: 0};
   let zoom = 1;
   let dragging = false, lastMouse = null, hovered = null;
+  let touches = [], lastPinchDist = null, tapStart = null;
+
+  function getCanvasSize() {
+    W = window.innerWidth - NAV_OFFSET();
+    H = window.innerHeight - TOP_OFFSET();
+  }
 
   function initCanvas() {
+    getCanvasSize();
     canvas.width = W * dpr;
     canvas.height = H * dpr;
     ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
+    pan = {x: W/2, y: H/2};
+    if (isMobile()) zoom = 0.55;
   }
 
   function draw() {
@@ -147,14 +214,11 @@
     ctx.fillRect(0, 0, W, H);
 
     EDGES.forEach(([a,b]) => {
-      const na = NODES.find(n => n.id===a);
-      const nb = NODES.find(n => n.id===b);
+      const na = NODES.find(n => n.id===a), nb = NODES.find(n => n.id===b);
       if (!na || !nb) return;
       const sx = na.x*zoom + pan.x, sy = na.y*zoom + pan.y;
       const ex = nb.x*zoom + pan.x, ey = nb.y*zoom + pan.y;
-      ctx.beginPath();
-      ctx.moveTo(sx, sy);
-      ctx.lineTo(ex, ey);
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey);
       const isActive = hovered && (hovered.id===a || hovered.id===b);
       ctx.strokeStyle = isActive ? 'rgba(50,50,40,0.6)' : 'rgba(80,80,70,0.3)';
       ctx.lineWidth = isActive ? 1.5 : 0.8;
@@ -165,23 +229,17 @@
       const sx = n.x*zoom + pan.x, sy = n.y*zoom + pan.y;
       const r = n.r * zoom;
       const isHov = hovered && hovered.id === n.id;
-
-      ctx.beginPath();
-      ctx.arc(sx, sy, r, 0, Math.PI*2);
+      ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI*2);
       ctx.fillStyle = n.color;
       ctx.globalAlpha = isHov ? 1 : 0.85;
-      ctx.fill();
-      ctx.globalAlpha = 1;
+      ctx.fill(); ctx.globalAlpha = 1;
 
-      if (zoom > 0.5 || isHov) {
+      if (zoom > 0.4 || isHov) {
         const fs = Math.max(9, Math.min(13, 11*zoom));
         ctx.font = `${isHov ? 500 : 400} ${fs}px sans-serif`;
-        ctx.fillStyle = '#111';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'top';
-        ctx.globalAlpha = isHov ? 1 : Math.min(1, zoom * 1.2);
-        const words = n.label.split(' ');
-        const lh = fs * 1.3;
+        ctx.fillStyle = '#111'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        ctx.globalAlpha = isHov ? 1 : Math.min(1, zoom * 1.5);
+        const words = n.label.split(' '), lh = fs * 1.3;
         let lines = [], cur = '';
         words.forEach(w => {
           const test = cur ? cur + ' ' + w : w;
@@ -196,21 +254,32 @@
   }
 
   function getHovered(mx, my) {
-    const wx = (mx - pan.x) / zoom;
-    const wy = (my - pan.y) / zoom;
+    const wx = (mx - pan.x) / zoom, wy = (my - pan.y) / zoom;
+    const hitMult = isMobile() ? 2.5 : 1.8;
     return NODES.find(n => {
       const dx = n.x - wx, dy = n.y - wy;
-      return Math.sqrt(dx*dx + dy*dy) < n.r / zoom * 1.8;
+      return Math.sqrt(dx*dx + dy*dy) < n.r * hitMult;
     }) || null;
   }
 
+  function showSheet(node) {
+    if (!node) return;
+    const d = PAGES[node.id]; if (!d) return;
+    document.getElementById('mobile-sheet-label').textContent = d.label;
+    document.getElementById('mobile-sheet-title').textContent = d.title;
+    document.getElementById('mobile-sheet-body').textContent = d.body;
+    const link = document.getElementById('mobile-sheet-link');
+    link.href = node.id === 'index' ? '/' : node.id + '.html';
+    sheet.classList.add('visible');
+  }
+  function hideSheet() { sheet.classList.remove('visible'); }
+
+  // Mouse
   canvas.addEventListener('mousemove', e => {
-    const mx = e.clientX - 136, my = e.clientY;
+    const mx = e.clientX - NAV_OFFSET(), my = e.clientY - TOP_OFFSET();
     if (dragging && lastMouse) {
-      pan.x += mx - lastMouse.x;
-      pan.y += my - lastMouse.y;
-      lastMouse = {x: mx, y: my};
-      draw(); return;
+      pan.x += mx - lastMouse.x; pan.y += my - lastMouse.y;
+      lastMouse = {x: mx, y: my}; draw(); return;
     }
     const h = getHovered(mx, my);
     if (h !== hovered) { hovered = h; draw(); }
@@ -223,9 +292,8 @@
         document.getElementById('tip-body').textContent = d.body;
       }
       tip.style.opacity = '1';
-      const tx = e.clientX + 16;
-      const ty = Math.max(10, e.clientY - 80);
-      tip.style.left = (tx + 380 > window.innerWidth ? e.clientX - 396 : tx) + 'px';
+      const tipW = 300, tx = e.clientX + 16, ty = Math.max(10, e.clientY - 80);
+      tip.style.left = (tx + tipW > window.innerWidth ? e.clientX - tipW - 16 : tx) + 'px';
       tip.style.top = ty + 'px';
     } else {
       canvas.style.cursor = dragging ? 'grabbing' : 'grab';
@@ -235,25 +303,21 @@
 
   canvas.addEventListener('mousedown', e => {
     dragging = true;
-    lastMouse = {x: e.clientX - 136, y: e.clientY};
+    lastMouse = {x: e.clientX - NAV_OFFSET(), y: e.clientY - TOP_OFFSET()};
     canvas.style.cursor = 'grabbing';
   });
 
   canvas.addEventListener('mouseup', e => {
-    const mx = e.clientX - 136, my = e.clientY;
+    const mx = e.clientX - NAV_OFFSET(), my = e.clientY - TOP_OFFSET();
     if (lastMouse && Math.abs(mx - lastMouse.x) < 4 && Math.abs(my - lastMouse.y) < 4) {
       const h = getHovered(mx, my);
       if (h) {
-        const url = h.id === 'index' ? '/' : 'problem/' + h.id + '.html';
-        if (e.metaKey || e.ctrlKey) {
-          window.open(url, '_blank');
-        } else {
-          window.location.href = url;
-        }
+        const url = h.id === 'index' ? '/' : h.id + '.html';
+        if (e.metaKey || e.ctrlKey) window.open(url, '_blank');
+        else window.location.href = url;
       }
     }
-    dragging = false; lastMouse = null;
-    canvas.style.cursor = 'grab';
+    dragging = false; lastMouse = null; canvas.style.cursor = 'grab';
   });
 
   canvas.addEventListener('mouseleave', () => {
@@ -262,25 +326,97 @@
 
   canvas.addEventListener('wheel', e => {
     e.preventDefault();
-    const mx = e.clientX - 136, my = e.clientY;
+    const mx = e.clientX - NAV_OFFSET(), my = e.clientY - TOP_OFFSET();
     const delta = e.deltaY > 0 ? 0.9 : 1.1;
     const nz = Math.max(0.3, Math.min(3, zoom * delta));
     pan.x = mx - (mx - pan.x) * (nz / zoom);
     pan.y = my - (my - pan.y) * (nz / zoom);
-    zoom = nz;
-    draw();
+    zoom = nz; draw();
   }, {passive: false});
 
+  // Touch
+  function getTouchPos(t) {
+    const r = canvas.getBoundingClientRect();
+    return {x: t.clientX - r.left, y: t.clientY - r.top};
+  }
+  function pinchDist(t1, t2) {
+    const dx = t1.clientX - t2.clientX, dy = t1.clientY - t2.clientY;
+    return Math.sqrt(dx*dx + dy*dy);
+  }
+  function pinchMid(t1, t2) {
+    const r = canvas.getBoundingClientRect();
+    return {x: (t1.clientX + t2.clientX)/2 - r.left, y: (t1.clientY + t2.clientY)/2 - r.top};
+  }
+
+  canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    touches = Array.from(e.touches);
+    if (touches.length === 1) {
+      const p = getTouchPos(touches[0]);
+      tapStart = {x: p.x, y: p.y, time: Date.now()};
+      lastMouse = p; dragging = true;
+    } else if (touches.length === 2) {
+      lastPinchDist = pinchDist(touches[0], touches[1]);
+      tapStart = null; dragging = false;
+    }
+  }, {passive: false});
+
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    touches = Array.from(e.touches);
+    if (touches.length === 1 && dragging && lastMouse) {
+      const p = getTouchPos(touches[0]);
+      pan.x += p.x - lastMouse.x; pan.y += p.y - lastMouse.y;
+      lastMouse = p;
+      if (tapStart && (Math.abs(p.x - tapStart.x) > 8 || Math.abs(p.y - tapStart.y) > 8)) tapStart = null;
+      draw();
+    } else if (touches.length === 2 && lastPinchDist !== null) {
+      const newDist = pinchDist(touches[0], touches[1]);
+      const mid = pinchMid(touches[0], touches[1]);
+      const nz = Math.max(0.2, Math.min(4, zoom * newDist / lastPinchDist));
+      pan.x = mid.x - (mid.x - pan.x) * (nz / zoom);
+      pan.y = mid.y - (mid.y - pan.y) * (nz / zoom);
+      zoom = nz; lastPinchDist = newDist; draw();
+    }
+  }, {passive: false});
+
+  canvas.addEventListener('touchend', e => {
+    e.preventDefault();
+    const remaining = Array.from(e.touches);
+    if (remaining.length === 0) {
+      if (tapStart && Date.now() - tapStart.time < 300) {
+        const h = getHovered(tapStart.x, tapStart.y);
+        if (h) {
+          if (isMobile()) { hovered = h; draw(); showSheet(h); }
+          else window.location.href = h.id === 'index' ? '/' : h.id + '.html';
+        } else { hideSheet(); }
+      }
+      dragging = false; lastMouse = null; lastPinchDist = null; tapStart = null;
+    } else if (remaining.length === 1) {
+      lastPinchDist = null;
+      lastMouse = getTouchPos(remaining[0]); dragging = true;
+    }
+    touches = remaining;
+  }, {passive: false});
+
+  document.getElementById('mobile-sheet-close').addEventListener('click', () => {
+    hideSheet(); hovered = null; draw();
+  });
+
+  function updateInstructions() {
+    document.getElementById('instructions').textContent =
+      isMobile() ? 'drag · pinch to zoom · tap nodes' : 'drag · scroll to zoom · click to visit';
+  }
+
   window.addEventListener('resize', () => {
-    W = window.innerWidth - 136;
-    H = window.innerHeight;
-    canvas.width = W * dpr;
-    canvas.height = H * dpr;
+    getCanvasSize();
+    canvas.width = W * dpr; canvas.height = H * dpr;
     ctx.scale(dpr, dpr);
-    draw();
+    updateInstructions(); draw();
   });
 
   initCanvas();
+  updateInstructions();
   draw();
   </script>
 </body>
