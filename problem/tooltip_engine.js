@@ -40,10 +40,9 @@
     s.textContent = [
       '.tlink--read { color: #999 !important; text-decoration-color: rgba(153,153,153,0.35) !important; transition: color 0.15s, text-decoration-color 0.15s; }',
       '.tlink--read:hover { color: #444 !important; text-decoration-color: rgba(68,68,68,0.4) !important; }',
-      '#ww-progress { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 4px; line-height: 1; }',
-      '#ww-progress-label { font-family: "JetBrains Mono", monospace; font-size: 0.5rem; letter-spacing: 0.06em; color: #999 !important; white-space: nowrap; }',
-      '#ww-progress-track { display: block; width: 36px; height: 2px; background: rgba(0,0,0,0.12); border-radius: 1px; overflow: hidden; flex-shrink: 0; }',
-      '#ww-progress-fill { display: block; height: 2px; background: #1D9E75 !important; border-radius: 1px; transition: width 0.3s ease; }'
+      '#ww-progress { display:inline-flex;align-items:center; }',
+      '#ww-progress-track { display:block;width:60px;height:4px;background:rgba(0,0,0,0.1);border-radius:2px;overflow:hidden; }',
+      '@media (max-width:768px) { #ww-progress { position:fixed;top:1.2rem;left:50%;transform:translateX(-50%); } #ww-progress-track { width:140px !important; } }'
     ].join('');
     document.head.appendChild(s);
   }
@@ -52,9 +51,10 @@
     const wrap = document.createElement('span');
     wrap.id = 'ww-progress';
     const pct = Math.round(count / TOTAL * 100);
+    wrap.style.cssText = 'display:inline-flex;align-items:center;';
     wrap.innerHTML =
-      '<span id="ww-progress-label">' + count + '\u202f/\u202f' + TOTAL + '</span>' +
-      '<span id="ww-progress-track"><span id="ww-progress-fill" style="width:' + pct + '%"></span></span>';
+      '<span id="ww-progress-track" style="display:block;width:60px;height:4px;background:rgba(0,0,0,0.1);border-radius:2px;overflow:hidden;">' +
+      '<span style="display:block;height:4px;width:' + pct + '%;background:#1D9E75;border-radius:2px;transition:width 0.3s;"></span></span>';
     return wrap;
   }
 
