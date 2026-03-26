@@ -269,7 +269,7 @@
     document.getElementById('mobile-sheet-title').textContent = d.title;
     document.getElementById('mobile-sheet-body').textContent = d.body;
     const link = document.getElementById('mobile-sheet-link');
-    link.href = node.id === 'index' ? '/' : node.id + '.html';
+    link.href = node.id === 'index' ? '/' : 'problem/' + node.id + '.html';
     sheet.classList.add('visible');
   }
   function hideSheet() { sheet.classList.remove('visible'); }
@@ -312,7 +312,7 @@
     if (lastMouse && Math.abs(mx - lastMouse.x) < 4 && Math.abs(my - lastMouse.y) < 4) {
       const h = getHovered(mx, my);
       if (h) {
-        const url = h.id === 'index' ? '/' : h.id + '.html';
+        const url = h.id === 'index' ? '/' : 'problem/' + h.id + '.html';
         if (e.metaKey || e.ctrlKey) window.open(url, '_blank');
         else window.location.href = url;
       }
@@ -388,7 +388,7 @@
         const h = getHovered(tapStart.x, tapStart.y);
         if (h) {
           if (isMobile()) { hovered = h; draw(); showSheet(h); }
-          else window.location.href = h.id === 'index' ? '/' : h.id + '.html';
+          else window.location.href = h.id === 'index' ? '/' : 'problem/' + h.id + '.html';
         } else { hideSheet(); }
       }
       dragging = false; lastMouse = null; lastPinchDist = null; tapStart = null;
