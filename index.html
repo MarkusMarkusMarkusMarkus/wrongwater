@@ -87,8 +87,33 @@
       text-underline-offset: 3px;
       cursor: pointer;
       white-space: nowrap;
+      transition: color 0.15s, text-decoration-color 0.15s;
     }
     .tlink:hover { color: var(--link-hover); text-decoration-color: var(--link-hover); }
+    .tlink.tlink--read {
+      color: var(--text-muted);
+      text-decoration-color: rgba(153, 153, 153, 0.35);
+    }
+    .tlink.tlink--read:hover { color: var(--text); text-decoration-color: rgba(26,26,26,0.35); }
+
+    /* Progress counter */
+    #nav-progress {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      #nav-progress {
+        position: fixed;
+        top: 1.2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 50;
+      }
+    }
 
     .hidden-map {
       font-size: 1.25rem;
@@ -172,6 +197,7 @@
 <body>
 
   <div class="top-nav">
+    <span id="nav-progress"></span>
     <a class="top-nav-item" href="map.html">Map</a>
     <a class="top-nav-item" href="about.html">About</a>
   </div>
@@ -203,7 +229,34 @@
   </div>
 
   <script>
-    const cache = {};
+    // ── Read tracking ────────────────────────────────────────────────────────
+    const ALL_PAGES = [
+      'public-language','engineered-language','engineered-names','engineered-words',
+      'engineered-concepts','shared-maps','social-reality','legitimacy',
+      'interlocking-expectations','political-struggle','map-territory','map-is-territory',
+      'material-social','concepts','denotation-connotation','examples-words','many-others'
+    ];
+    const TOTAL = ALL_PAGES.length;
+
+    function getRead() {
+      try { return JSON.parse(localStorage.getItem('ww_read') || '[]'); } catch(e) { return []; }
+    }
+
+    function applyReadState() {
+      const read = getRead();
+      const readSet = new Set(read);
+      document.querySelectorAll('.tlink').forEach(el => {
+        if (readSet.has(el.dataset.key)) el.classList.add('tlink--read');
+        else el.classList.remove('tlink--read');
+      });
+      const count = ALL_PAGES.filter(p => readSet.has(p)).length;
+      const el = document.getElementById('nav-progress');
+      if (el) el.textContent = count > 0 ? count + ' / ' + TOTAL : '';
+    }
+
+    applyReadState();
+
+    
     const preview = document.getElementById('preview');
     const previewLabel = document.getElementById('preview-label');
     const previewTitle = document.getElementById('preview-title');
