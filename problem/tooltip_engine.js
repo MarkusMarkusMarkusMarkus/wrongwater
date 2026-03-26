@@ -42,7 +42,7 @@
       '.tlink--read:hover { color: #444 !important; text-decoration-color: rgba(68,68,68,0.4) !important; }',
       '#ww-progress { display:inline-flex;align-items:center; }',
       '#ww-progress-track { display:block;width:60px;height:4px;background:rgba(0,0,0,0.1);border-radius:2px;overflow:hidden; }',
-      '@media (max-width:768px) { #ww-progress { position:fixed;top:1.2rem;left:50%;transform:translateX(-50%); } #ww-progress-track { width:140px !important; } }'
+      '@media (max-width:768px) { #ww-progress { position:fixed;top:0;pointer-events:none; } }'
     ].join('');
     document.head.appendChild(s);
   }
@@ -51,10 +51,9 @@
     const wrap = document.createElement('span');
     wrap.id = 'ww-progress';
     const pct = Math.round(count / TOTAL * 100);
-    wrap.style.cssText = 'display:inline-flex;align-items:center;';
     wrap.innerHTML =
-      '<span id="ww-progress-track" style="display:block;width:60px;height:4px;background:rgba(0,0,0,0.1);border-radius:2px;overflow:hidden;">' +
-      '<span style="display:block;height:4px;width:' + pct + '%;background:#1D9E75;border-radius:2px;transition:width 0.3s;"></span></span>';
+      '<span id="ww-progress-label">' + count + '\u202f/\u202f' + TOTAL + '</span>' +
+      '<span id="ww-progress-track"><span id="ww-progress-fill" style="width:' + pct + '%"></span></span>';
     return wrap;
   }
 
@@ -87,6 +86,41 @@
   markCurrentPageRead();
   applyDimming();
   injectProgress();
+
+  // Mobile: position bar exactly between "Problem" (nav-item.active) and "Map" (top-nav-item or last nav-item)
+  function positionMobileBar() {
+    if (window.innerWidth > 768) return;
+    const bar = document.getElementById('ww-progress');
+    if (!bar) return;
+    const nav = document.querySelector('nav');
+    if (!nav) return;
+    const navRect = nav.getBoundingClientRect();
+    const items = nav.querySelectorAll('.nav-item');
+    if (items.length < 1) return;
+    // "Problem" is first item, find the Map/About link which is in .mobile-nav-extra or last item
+    const firstItem = items[0];
+    const lastItem = nav.querySelector('.mobile-nav-extra a') || items[items.length - 1];
+    const firstRect = firstItem.getBoundingClientRect();
+    const lastRect = lastItem.getBoundingClientRect();
+    const gapLeft = firstRect.right;
+    const gapRight = lastRect.left;
+    const barWidth = gapRight - gapLeft - 24; // 12px padding each side
+    const barLeft = gapLeft + 12;
+    const barTop = navRect.top + (navRect.height / 2) - 2; // vertically centered, 2 = half of 4px bar
+    bar.style.position = 'fixed';
+    bar.style.left = barLeft + 'px';
+    bar.style.top = barTop + 'px';
+    bar.style.width = barWidth + 'px';
+    const track = bar.querySelector('#ww-progress-track, span');
+    if (track) track.style.width = barWidth + 'px';
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', positionMobileBar);
+  } else {
+    positionMobileBar();
+  }
+  window.addEventListener('resize', positionMobileBar);
 
   // ── End read tracking ─────────────────────────────────────────────────────────
 
