@@ -175,7 +175,6 @@
 <body>
 
   <div class="top-nav">
-    <a class="top-nav-item" href="map.html">Map</a>
     <a class="top-nav-item" href="about.html">About</a>
   </div>
 
@@ -304,36 +303,11 @@
         'interlocking-expectations','political-struggle','map-territory','map-is-territory',
         'material-social','concepts','denotation-connotation','examples-words','many-others'
       ];
-      var TOTAL = ALL_PAGES.length;
       var read;
       try { read = new Set(JSON.parse(localStorage.getItem('ww_read') || '[]')); } catch(e) { read = new Set(); }
-
       document.querySelectorAll('.tlink').forEach(function(el) {
         if (read.has(el.dataset.key)) el.classList.add('tlink--read');
       });
-
-      var count = ALL_PAGES.filter(function(p) { return read.has(p); }).length;
-      if (count === 0) return;
-      var pct = Math.round(count / TOTAL * 100);
-
-      var bar = document.createElement('span');
-      bar.id = 'ww-progress';
-      bar.style.cssText = 'display:inline-flex;align-items:center;';
-      bar.innerHTML =
-        '<span id="ww-progress-track" style="display:block;width:60px;height:4px;background:rgba(0,0,0,0.1);border-radius:2px;overflow:hidden;">' +
-        '<span style="display:block;height:4px;width:' + pct + '%;background:#1D9E75;border-radius:2px;transition:width 0.3s;"></span></span>';
-
-      var topNav = document.querySelector('.top-nav');
-      if (topNav) topNav.insertBefore(bar, topNav.firstChild);
-
-      // Mobile: inject a full-width bar sitting in the nav between Solution and Map
-      var style = document.createElement('style');
-      style.textContent =
-        '@media (max-width:768px) {' +
-        '#ww-progress { position:fixed; top:1.2rem; left:50%; transform:translateX(-50%); display:flex; align-items:center; }' +
-        '#ww-progress-track { width:140px !important; height:4px; }' +
-        '}';
-      document.head.appendChild(style);
     })();
   </script>
 
