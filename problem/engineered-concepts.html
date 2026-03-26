@@ -183,7 +183,7 @@
       right: 2rem;
       display: flex;
       gap: 1.6rem;
-      z-index: 50;
+      z-index: 150;
     }
     .top-nav-item {
       font-family: 'JetBrains Mono', monospace;
@@ -194,6 +194,9 @@
       color: var(--text-muted);
     }
     .top-nav-item:hover { color: var(--link); }
+    @media (max-width: 768px) {
+      .top-nav { display: none; }
+    }
   </style>
 </head>
 <body>
