@@ -9,8 +9,9 @@
       font-family: 'EB Garamond', Georgia, serif;
       padding: 1.5rem;
     }
-    canvas { display: block; width: 100%; }
+    canvas { display: block; width: 100%; max-width: 560px; }
     .controls {
+      max-width: 560px;
       display: flex; align-items: center; gap: 0.8rem;
       margin-top: 0.8rem; font-size: 0.75rem; color: #888;
     }
@@ -23,6 +24,7 @@
     .legend {
       display: flex; gap: 2rem; margin-top: 0.7rem;
       font-size: 0.75rem; color: #888; justify-content: center;
+      max-width: 560px;
     }
     .dot {
       display: inline-block; width: 20px; height: 2px;
@@ -31,7 +33,7 @@
   </style>
 </head>
 <body>
-  <canvas id="c" width="560" height="200"></canvas>
+  <canvas id="c"></canvas>
   <div class="controls">
     <label>Private belief</label>
     <input type="range" id="slider" min="0" max="100" value="85">
@@ -47,6 +49,12 @@
     const slider = document.getElementById('slider');
     const valEl = document.getElementById('val');
     const W = 560, H = 200;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.scale(dpr, dpr);
     const pad = { t: 30, r: 20, b: 35, l: 45 };
     const cw = W - pad.l - pad.r;
     const ch = H - pad.t - pad.b;
