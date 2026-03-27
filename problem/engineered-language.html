@@ -33,8 +33,11 @@
     }
 
     nav {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 136px;
-      min-height: 100vh;
+      height: 100vh;
       padding: 2.8rem 0 2.8rem 1.8rem;
       display: flex;
       flex-direction: column;
@@ -123,6 +126,7 @@
       flex: 1; display: flex;
       justify-content: center;
       padding: 3.5rem 2rem 6rem 2rem;
+      margin-left: 136px;
     }
     .content { width: 100%; max-width: 660px; }
     h1 {
@@ -159,6 +163,7 @@
       main {
         padding: 2rem 1.2rem 4rem 1.2rem !important;
         justify-content: flex-start !important;
+        margin-left: 0 !important;
       }
       .content { max-width: 100% !important; }
       h1 { font-size: 1.3rem !important; }
@@ -178,7 +183,7 @@
     }
     .top-nav {
       position: fixed;
-      top: 1.4rem;
+      top: 2.8rem;
       right: 2rem;
       display: flex;
       gap: 1.6rem;
@@ -216,7 +221,6 @@
 <body>
   <div class="top-nav">
     <a class="top-nav-item" href="../map.html">Map</a>
-    <a class="top-nav-item" href="../about.html">About</a>
   </div>
 
   
@@ -225,7 +229,6 @@
     <a class="nav-item" href="#">Solution (Upcoming)</a>
     <span class="mobile-nav-extra">
       <a href="../map.html">Map</a>
-      <a href="../about.html">About</a>
     </span>
   </nav>
 
