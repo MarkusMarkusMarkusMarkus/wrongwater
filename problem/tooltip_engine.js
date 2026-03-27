@@ -5,7 +5,7 @@
     'public-language','engineered-language','engineered-names','engineered-words',
     'engineered-concepts','shared-maps','social-reality','legitimacy',
     'interlocking-expectations','political-struggle','map-territory','map-is-territory',
-    'material-social','concepts','denotation-connotation','examples-words','many-others'
+    'material-social','concepts','denotation-connotation'
   ];
   const TOTAL = ALL_PAGES.length;
 
