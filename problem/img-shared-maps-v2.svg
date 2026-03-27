@@ -40,4 +40,6 @@
   <text font-size="28" x="408" y="142" text-anchor="middle" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:28px;font-weight:400;text-anchor:middle;dominant-baseline:auto">🌐</text>
   <text font-family="Georgia,serif" font-size="10" fill="#aaa" x="408" y="176" text-anchor="middle" style="fill:rgb(170, 170, 170);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:Georgia, serif;font-size:10px;font-weight:400;text-anchor:middle;dominant-baseline:auto">shared world</text>
 
+  <!-- Caption -->
+  <text font-family="Georgia,serif" font-size="12" fill="#999" font-style="italic" x="280" y="200" text-anchor="middle" style="fill:rgb(153, 153, 153);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:Georgia, serif;font-size:12px;font-weight:400;font-style:italic;text-anchor:middle;dominant-baseline:auto">Sufficient overlap between maps makes a shared world possible.</text>
 </svg>
