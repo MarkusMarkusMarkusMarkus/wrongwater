@@ -220,32 +220,30 @@
 </head>
 <body>
   <div class="top-nav">
-    <a class="top-nav-item" href="../map.html">Map</a>
+    <a class="top-nav-item" href="/map">Map</a>
   </div>
 
-  
-    <nav>
+  <nav>
     <a class="nav-item active" href="/">Problem</a>
     <a class="nav-item" href="#">Solution (Upcoming)</a>
     <span class="mobile-nav-extra">
-      <a href="../map.html">Map</a>
+      <a href="/map">Map</a>
     </span>
   </nav>
 
   <main>
     <div class="content">
-      
+
   <h1>Material reality is that which, when you stop believing in it, does not go away.</h1>
-  <p>Philip K. Dick defined reality as "that which, when you stop believing in it, doesn't go away." Mountains, water, air, sunlight — neither of these care about you think about it.</p>
+  <p>Philip K. Dick defined reality as "that which, when you stop believing in it, doesn't go away." Mountains, water, air, sunlight — neither of these care about what you think about them.</p>
 
       <iframe src="img-material-social.html" style="width:100%;height:320px;border:none;margin:1.5rem 0;display:block;" scrolling="no"></iframe>
-      <p>Social reality isn't like that. It is made from collectively recognized facts — money, laws, the Emperor's power, borders, marriage, job titles, corporations, calendars. Social reality exists only insofar as we believe that it does.</p>
+
+  <p>Social reality isn't like that. It is made from collectively recognized facts — money, laws, the Emperor's power, borders, marriage, job titles, corporations, calendars. Social reality exists only insofar as we believe that it does.</p>
   <p>There are Iron Age tribes living in the Amazon who don't believe in banks and, therefore, don't have banks. You could airlift a bank and drop it in the middle of their village but you wouldn't really expect that, should you come back in a few years, the tribespeople would all be dressed as bank tellers. The belief is missing. Material reality has been replicated. But social reality has not — because their beliefs are all the same as they were before.</p>
   <p>Importantly, material reality survives universal withdrawal of belief while social reality does not.</p>
-  <p>This matters because it means social reality can be constructed — and therefore contested. Whoever shapes the <span class="tlink" data-key="shared-maps">shared maps</span> shapes what counts as real, binding, and worth acting on. <br><br>See also: <span class="tlink" data-key="map-is-territory">the map is the territory</span>.</p>
-      
+  <p>This matters because it means social reality can be constructed — and therefore contested. Whoever shapes the <span class="tlink" data-key="shared-maps">shared maps</span> shapes what counts as real, binding, and worth acting on. See also: <span class="tlink" data-key="map-is-territory">the map is the territory</span>.</p>
 
-      
       <iframe src="belief-chart.html" style="width:100%;height:420px;border:none;margin:1.5rem 0;display:block;" scrolling="no"></iframe>
     </div>
   </main>
@@ -261,50 +259,8 @@
     </div>
   </div>
 
-  
   <script src="tooltip_engine.js"></script>
 
-  <script>
-  (function() {
-    if (new URLSearchParams(window.location.search).get('edit') !== 'true') return;
-
-    const bar = document.createElement('div');
-    bar.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;gap:0.6rem;align-items:center;';
-
-    const label = document.createElement('span');
-    label.textContent = 'Edit mode';
-    label.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.45rem;letter-spacing:0.1em;text-transform:uppercase;color:#999;';
-
-    const btn = document.createElement('button');
-    btn.textContent = 'Copy HTML';
-    btn.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.45rem;letter-spacing:0.08em;text-transform:uppercase;background:#1a4a8a;color:#fff;border:none;padding:0.4rem 0.8rem;cursor:pointer;border-radius:2px;';
-    btn.onclick = function() {
-      // Remove edit mode indicators before copying
-      document.querySelectorAll('.content h1, .content p').forEach(function(el) {
-        el.removeAttribute('contenteditable');
-        el.style.borderBottom = '';
-        el.style.outline = '';
-      });
-      const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-      navigator.clipboard.writeText(html).then(function() {
-        btn.textContent = 'Copied!';
-        setTimeout(function() { btn.textContent = 'Copy HTML'; }, 2000);
-      });
-    };
-
-    bar.appendChild(label);
-    bar.appendChild(btn);
-    document.body.appendChild(bar);
-
-    document.querySelectorAll('.content h1, .content p').forEach(function(el) {
-      el.contentEditable = 'true';
-      el.style.outline = 'none';
-      el.style.borderBottom = '1px dashed #ccc';
-      el.addEventListener('focus', function() { el.style.borderBottom = '1px dashed #1a4a8a'; });
-      el.addEventListener('blur', function() { el.style.borderBottom = '1px dashed #ccc'; });
-    });
-  })();
-  </script>
-
   <script>try{var r=JSON.parse(localStorage.getItem('ww_read')||'[]');if(!r.includes('material-social')){r.push('material-social');localStorage.setItem('ww_read',JSON.stringify(r));}}catch(e){}</script>
+
 </body></html>
