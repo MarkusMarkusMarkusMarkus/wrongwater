@@ -381,33 +381,43 @@
   copyBtn.style.cssText = btnBase + 'background:#1a4a8a;color:#fff;';
 
   copyBtn.onclick = function() {
-    // Strip editing artefacts
+    // Strip contenteditable styling
     document.querySelectorAll('.content h1, .content p').forEach(function(el) {
       el.removeAttribute('contenteditable');
       el.style.borderBottom = '';
       el.style.outline = '';
     });
-    // Remove stale inline styles on tlinks and preview position
-    document.querySelectorAll('.tlink').forEach(function(el) { el.style.cssText = ''; });
-    const pv = document.getElementById('preview');
-    if (pv) { pv.style.top = ''; pv.style.left = ''; }
+    // Strip inline styles and runtime classes from tlinks
+    document.querySelectorAll('.tlink').forEach(function(el) {
+      el.style.cssText = '';
+      el.classList.remove('tlink--read');
+    });
+    // Strip inline styles from preview
+    var pv = document.getElementById('preview');
+    if (pv) pv.removeAttribute('style');
 
-    // Remove edit UI from DOM before serialising
+    // Remove runtime-injected elements before serialising
     bar.remove();
     dropdown.remove();
+    var progressStyle = document.getElementById('__ww-progress-style__');
+    if (progressStyle) progressStyle.remove();
+    var progressBar = document.getElementById('ww-progress');
+    if (progressBar) progressBar.remove();
+    var progressMobile = document.getElementById('ww-progress-mobile');
+    if (progressMobile) progressMobile.remove();
+    document.documentElement.removeAttribute('data-tooltip-bound');
 
-    const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
 
     navigator.clipboard.writeText(html).then(function() {
-      document.body.appendChild(bar);
-      document.body.appendChild(dropdown);
       copyBtn.textContent = 'Copied!';
       setTimeout(function() { copyBtn.textContent = 'Copy HTML'; }, 2000);
-      applyEditable();
-    }).catch(function() {
-      document.body.appendChild(bar);
-      document.body.appendChild(dropdown);
-    });
+    }).catch(function() {});
+
+    // Re-add edit UI
+    document.body.appendChild(bar);
+    document.body.appendChild(dropdown);
+    applyEditable();
   };
 
   bar.appendChild(editLabel);
