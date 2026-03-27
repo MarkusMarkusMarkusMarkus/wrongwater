@@ -381,15 +381,14 @@
   copyBtn.style.cssText = btnBase + 'background:#1a4a8a;color:#fff;';
 
   copyBtn.onclick = function() {
-    // Strip contenteditable styling
+    // Strip contenteditable and all inline styles from h1/p
     document.querySelectorAll('.content h1, .content p').forEach(function(el) {
       el.removeAttribute('contenteditable');
-      el.style.borderBottom = '';
-      el.style.outline = '';
+      el.removeAttribute('style');
     });
     // Strip inline styles and runtime classes from tlinks
     document.querySelectorAll('.tlink').forEach(function(el) {
-      el.style.cssText = '';
+      el.removeAttribute('style');
       el.classList.remove('tlink--read');
     });
     // Strip inline styles from preview
