@@ -204,3 +204,19 @@
         color: var(--text-muted);
       }
     }
+
+    .img-caption { font-size: 0.8rem; color: #aaa; margin-top: 0; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em; text-transform: uppercase; }
+
+    .expandable { margin: 1.2em 0; }
+    .expandable-toggle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--link); cursor: pointer;
+      border-bottom: 1px solid var(--underline); padding-bottom: 1px;
+      display: inline-block;
+    }
+    .expandable-toggle:hover { color: var(--link-hover); }
+    .expandable-toggle::before { content: '+ '; }
+    .expandable-toggle.open::before { content: '− '; }
+    .expandable-body { display: none; margin-top: 0.8em; }
+    .expandable-body.open { display: block; }
