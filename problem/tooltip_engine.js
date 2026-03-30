@@ -216,7 +216,7 @@
         }
       }
     });
-    el.addEventListener('touchend', e => {
+    el.addEventListener('touchstart', e => {
       e.preventDefault();
       if (activeTouch === el.dataset.key && preview.classList.contains('visible')) {
         window.location.href = el.dataset.key + '.html';
@@ -224,16 +224,16 @@
         activeTouch = el.dataset.key;
         show(el, el.dataset.key);
       }
-    });
+    }, { passive: false });
   }
 
   document.querySelectorAll('.tlink').forEach(bindTlink);
 
-  document.addEventListener('touchend', e => {
+  document.addEventListener('touchstart', e => {
     if (!preview.contains(e.target) && !e.target.classList.contains('tlink')) {
       hide();
     }
-  });
+  }, { passive: true });
 
   preview.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
   preview.addEventListener('mouseleave', hide);
