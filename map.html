@@ -208,10 +208,16 @@
     if (isMobile()) zoom = 0.55;
   }
 
+  function getRead() {
+    try { return new Set(JSON.parse(localStorage.getItem('ww_read') || '[]')); } catch(e) { return new Set(); }
+  }
+
   function draw() {
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = '#faf9f7';
     ctx.fillRect(0, 0, W, H);
+
+    const read = getRead();
 
     EDGES.forEach(([a,b]) => {
       const na = NODES.find(n => n.id===a), nb = NODES.find(n => n.id===b);
@@ -229,10 +235,20 @@
       const sx = n.x*zoom + pan.x, sy = n.y*zoom + pan.y;
       const r = n.r * zoom;
       const isHov = hovered && hovered.id === n.id;
+      const isRead = n.id === 'index' || read.has(n.id);
       ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI*2);
-      ctx.fillStyle = n.color;
       ctx.globalAlpha = isHov ? 1 : 0.85;
-      ctx.fill(); ctx.globalAlpha = 1;
+      if (isRead) {
+        ctx.fillStyle = n.color;
+        ctx.fill();
+      } else {
+        ctx.fillStyle = '#faf9f7';
+        ctx.fill();
+        ctx.strokeStyle = n.color;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
 
       if (zoom > 0.4 || isHov) {
         const fs = Math.max(9, Math.min(13, 11*zoom));
